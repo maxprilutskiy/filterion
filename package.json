@@ -1,0 +1,10 @@
+{
+  "name": "filter-criteria",
+  "version": "1.0.0",
+  "description": "Filter criteria builder",
+  "main": "build/index.js",
+  "repository": "https://github.com/prilutskiy/filter-criteria",
+  "author": "Max Prilutskiy",
+  "license": "MIT",
+  "private": true
+}

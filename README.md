@@ -1,1 +1,3 @@
-# query-criteria
+# Filter Criteria
+
+Filter criteria builder
