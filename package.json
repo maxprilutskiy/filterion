@@ -1,10 +1,26 @@
 {
-  "name": "filter-criteria",
+  "name": "filterion",
   "version": "1.0.0",
-  "description": "Filter criteria builder",
+  "description": "Data structure for filter criteria management",
   "main": "build/index.js",
-  "repository": "https://github.com/prilutskiy/filter-criteria",
+  "types": "build/index.d.ts",
+  "repository": "https://github.com/prilutskiy/filterion",
   "author": "Max Prilutskiy",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@types/jest": "^25.1.3",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.2.1",
+    "tslint": "^6.0.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-react": "^4.2.0",
+    "typescript": "^3.8.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "tslint -p ."
+  }
 }
