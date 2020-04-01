@@ -246,7 +246,7 @@ describe('Filterion.clear', () => {
 
     expect(clearedFilterion).toBe(filterion);
   });
-})
+});
 
 type MyTestFilter = {
   name: string;
