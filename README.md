@@ -11,38 +11,36 @@ Filterion
 </h1>
 
 <div align="center">
-A zero-dependencies immutable data structure for filter criteria management.
+A data structure for filter criteria management.
 
 </div>
 
-## ✨ Features
-
-- 🛡 Written in TypeScript with predictable static types.
-
 ## Install
+
+Install `filterion` using yarn or npm:
 
 ```bash
 yarn add filterion
+# or
+npm i filterion
 ```
 
-## Usage
+Then require it into any module:
 
-Example:
+```javascript
+import { Filterion } from "filterion";
 
-```typescript
 const filter = new Filterion()
-  .add("name", "Max")
-  .add("city", "Minsk")
-  .add("date", "yesterday", ">")
-  .add("date", "tomorrow", "<");
+  .add("device", "iPhone")
+  .add("price", 100, ">")
+  .add("price", 200, "<");
 
 console.log(filter.payload);
 
 /*
 {
-  name: { '=': [ 'Max' ] },
-  city: { '=': [ 'Minsk' ] },
-  date: { '>': [ 'yesterday' ], '<': [ 'tomorrow' ] }
+  device: { '=': [ 'iPhone' ] },
+  price: { '>': [ 100 ], '<': [ 200 ] }
 }
 */
 ```
