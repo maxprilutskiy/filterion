@@ -5,10 +5,23 @@ node_js:
 install:
   - yarn
 
-script:
-  - yarn lint
-  - yarn test
-  - yarn build
+stages:
+  - build
+  - test
+  - publish
+
+jobs:
+  include:
+    - stage: build
+        script:
+          - yarn build
+    - stage: test
+        script:
+          - yarn lint
+          - yarn test
+    - stage: publish
+        script:
+          - echo publish
 
 cache:
   yarn: true
