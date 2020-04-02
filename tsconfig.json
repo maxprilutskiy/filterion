@@ -23,5 +23,6 @@
     "declaration": true,
     "declarationMap": true
   },
-  "exclude": ["src/*.spec.*"]
+  "exclude": ["src/*.spec.ts"],
+  "include": ["src/*.ts"]
 }
