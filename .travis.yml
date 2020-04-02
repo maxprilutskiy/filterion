@@ -2,24 +2,24 @@ language: node_js
 node_js:
   - 12.16.1
 
-install:
-  - yarn
-
-stages:
-  - build
-  - test
-  - publish
-
-jobs:
-  include:
-    script:
-      - yarn lint
-      - yarn test
-      - yarn build
-
-cache:
-  yarn: true
-
 branches:
   only:
     - master
+
+install:
+  - yarn
+
+script:
+  - yarn lint
+  - yarn test
+  - yarn build
+
+deploy:
+  - provider: script
+    script: yarn semantic-release
+    skip_cleanup: true
+    on:
+      branch: master
+
+cache:
+  yarn: true
