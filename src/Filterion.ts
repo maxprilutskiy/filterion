@@ -1,7 +1,6 @@
 import { DEFAULT_OPERATOR } from './constants';
 import { IFilterionPayload, MaybeArray } from './types';
 
-
 /**
  * A data structure for filter criteria management
  *
@@ -76,7 +75,6 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     return new Filterion<S, O>(payloadClone);
   }
 
-
   /**
    * Filterion payload
    *
@@ -87,7 +85,6 @@ export class Filterion<S extends {} = {}, O extends string = string> {
   public get payload(): IFilterionPayload<S, O> {
     return this._payload;
   }
-
 
   /**
    * Check whether current instance contains any filters values
@@ -204,7 +201,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
   }
 
   /**
-   * Initialize payload's values collection if it doesn't exist yet
+   * Initialize payload"s values collection if it doesn"t exist yet
    *
    * @private
    * @template K Type of the filter key
@@ -223,7 +220,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
   }
 
   /**
-   * Remove values collection from a payload object if it's empty
+   * Remove values collection from a payload object if it"s empty
    *
    * @private
    * @template K
