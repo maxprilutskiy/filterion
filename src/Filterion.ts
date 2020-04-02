@@ -1,11 +1,10 @@
 import { DEFAULT_OPERATOR } from './constants';
+import { IFilterionPayload, MaybeArray } from './types';
 
-export class Filterion<TFilters extends {} = {}, TOperators extends string = string> {
-  public constructor(
-    private _payload: IFilterionPayload<TFilters, TOperators> = {},
-  ) { }
+export class Filterion<S extends {} = {}, O extends string = string> {
+  public constructor(private _payload: IFilterionPayload<S, O> = {}) { }
 
-  public add<F extends keyof TFilters>(field: F, value: TFilters[F] | TFilters[F][], op = DEFAULT_OPERATOR as TOperators): Filterion<TFilters, TOperators> {
+  public add<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = DEFAULT_OPERATOR as O): Filterion<S, O> {
     if (this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
@@ -20,10 +19,10 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
       payloadClone[field][op].push(v);
     }
 
-    return new Filterion<TFilters, TOperators>(payloadClone);
+    return new Filterion<S, O>(payloadClone);
   }
 
-  public remove<F extends keyof TFilters>(field: F, value?: TFilters[F] | TFilters[F][], op = DEFAULT_OPERATOR as TOperators): Filterion<TFilters, TOperators> {
+  public remove<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = DEFAULT_OPERATOR as O): Filterion<S, O> {
     if (!this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
@@ -40,10 +39,10 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
     }
 
     this.ensureFieldValueMeaningfull(payloadClone, field, op);
-    return new Filterion<TFilters, TOperators>(payloadClone);
+    return new Filterion<S, O>(payloadClone);
   }
 
-  public get payload(): IFilterionPayload<TFilters, TOperators> {
+  public get payload(): IFilterionPayload<S, O> {
     return this._payload;
   }
 
@@ -51,19 +50,19 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
     return Object.keys(this._payload).length === 0;
   }
 
-  public exists<F extends keyof TFilters>(field: F, value: TFilters[F] | TFilters[F][], op = DEFAULT_OPERATOR as TOperators): boolean {
+  public exists<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = DEFAULT_OPERATOR as O): boolean {
     const values = Array.isArray(value) ? value : [value];
     const result = values.every((v) => !!this._payload?.[field]?.[op]?.includes(v));
     return result;
   }
 
-  public clear(): Filterion<TFilters, TOperators> {
+  public clear(): Filterion<S, O> {
     if (this.isEmpty) { return this; }
 
-    return new Filterion<TFilters, TOperators>();
+    return new Filterion<S, O>();
   }
 
-  public includes(filterion: Filterion<TFilters, TOperators>): boolean {
+  public includes(filterion: Filterion<S, O>): boolean {
     if (this.isEmpty && filterion.isEmpty) { return true; }
 
     const currentPayload = this.payload;
@@ -80,11 +79,11 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
       const currentValue = currentPayload[externalKey];
       const externalValue = externalPayload[externalKey];
 
-      const currentOperators = Object.keys(currentValue);
+      const currenO = Object.keys(currentValue);
       const externalOperators = Object.keys(externalValue);
 
-      const existingExternalOperators = externalOperators.filter((eop) => currentOperators.includes(eop));
-      const allExternalOperatorsExist = existingExternalOperators.length === currentOperators.length;
+      const existingExternalOperators = externalOperators.filter((eop) => currenO.includes(eop));
+      const allExternalOperatorsExist = existingExternalOperators.length === currenO.length;
       if (!allExternalOperatorsExist) { return false; }
 
       for (const externalOp of existingExternalOperators) {
@@ -99,14 +98,14 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
     return true;
   }
 
-  public concat<F extends keyof TFilters, O extends TOperators>(filterion: Filterion<TFilters, TOperators>): Filterion<TFilters, TOperators> {
+  public concat<K extends keyof S>(filterion: Filterion<S, O>): Filterion<S, O> {
     if (filterion.isEmpty) { return this; }
     if (this.isEmpty) { return filterion; }
     if (this.includes(filterion)) { return this; }
 
     const payloadClone = Filterion.clonePayload(this._payload);
     const externalPayload = filterion.payload;
-    const externalKeys = Object.keys(externalPayload) as F[];
+    const externalKeys = Object.keys(externalPayload) as K[];
 
     for (const field of externalKeys) {
       const externalOperators = Object.keys(externalPayload[field]) as O[];
@@ -120,10 +119,10 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
       }
     }
 
-    return new Filterion<TFilters, TOperators>(payloadClone);
+    return new Filterion<S, O>(payloadClone);
   }
 
-  private ensureFieldValueNotEmpty<F extends keyof TFilters>(payload: IFilterionPayload<TFilters, TOperators>, field: F, op: TOperators): void {
+  private ensureFieldValueNotEmpty<K extends keyof S>(payload: IFilterionPayload<S, O>, field: K, op: O): void {
     if (!payload[field]) {
       payload[field] = {};
     }
@@ -132,7 +131,7 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
     }
   }
 
-  private ensureFieldValueMeaningfull<F extends keyof TFilters>(payload: IFilterionPayload<TFilters, TOperators>, field: F, op: TOperators): void {
+  private ensureFieldValueMeaningfull<K extends keyof S>(payload: IFilterionPayload<S, O>, field: K, op: O): void {
     if (payload[field]) {
       if (payload[field][op]) {
         if (!payload[field][op].length) {
@@ -145,15 +144,8 @@ export class Filterion<TFilters extends {} = {}, TOperators extends string = str
     }
   }
 
-  private static clonePayload<TFilters extends {}, TOperators extends string>(sourcePayload: IFilterionPayload<TFilters, TOperators>): IFilterionPayload<TFilters, TOperators> {
+  private static clonePayload<S extends {}, O extends string>(sourcePayload: IFilterionPayload<S, O>): IFilterionPayload<S, O> {
     const clonedPayload = JSON.parse(JSON.stringify(sourcePayload)) as typeof sourcePayload;
     return clonedPayload;
   }
 }
-
-export type IFilterionPayload<TFilters extends {}, TOperators extends string> = {
-  [f in keyof TFilters]?: {
-    [o in TOperators]?: TFilters[f][];
-  };
-};
-
