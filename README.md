@@ -11,7 +11,7 @@ Filterion
 </h1>
 
 <div align="center">
-A data structure for filter criteria management.
+Immutable structure for filter criteria management.
 
 </div>
 
