@@ -4,10 +4,7 @@
     "outDir": "build",
     "target": "es5",
     "module": "CommonJS",
-    "lib": [
-      "esnext",
-      "dom",
-    ],
+    "lib": ["esnext", "dom"],
     "moduleResolution": "node",
     "sourceMap": true,
     "jsx": "react",
@@ -25,5 +22,6 @@
     "esModuleInterop": true,
     "declaration": true,
     "declarationMap": true
-  }
+  },
+  "exclude": ["src/*.spec.*"]
 }

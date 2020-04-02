@@ -1,13 +1,13 @@
 {
   "name": "filterion",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "Data structure for filter criteria management",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "repository": "https://github.com/prilutskiy/filterion",
   "author": "Max Prilutskiy",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "devDependencies": {
     "@types/jest": "^25.1.4",
     "jest": "^25.2.4",
@@ -25,6 +25,10 @@
     "build": "tsc",
     "test": "jest",
     "lint": "tslint -p .",
-    "prepublish": "yarn lint && yarn test && yarn build"
-  }
+    "prepublish": "yarn build",
+    "prepack": "yarn build"
+  },
+  "files": [
+    "build"
+  ]
 }
