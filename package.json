@@ -1,6 +1,6 @@
 {
   "name": "filterion",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Data structure for filter criteria management",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/jest": "^25.1.4",
     "jest": "^25.2.4",
+    "semantic-release": "^17.0.4",
     "ts-jest": "^25.3.0",
     "tslint": "^6.1.0",
     "tslint-config-airbnb": "^5.11.2",
@@ -19,8 +20,11 @@
   },
   "dependencies": {},
   "scripts": {
+    "purge": "rm -rf node_modules",
+    "clean": "rm -rf build coverage",
     "build": "tsc",
     "test": "jest",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "prepublish": "yarn lint && yarn test && yarn build"
   }
 }
