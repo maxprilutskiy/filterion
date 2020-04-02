@@ -1,9 +1,11 @@
-export class Filterion<TFilters = any, TOperators extends FilterionBaseOperators = FilterionBaseOperators> {
+import { DEFAULT_OPERATOR } from './constants';
+
+export class Filterion<TFilters extends {} = {}, TOperators extends string = string> {
   public constructor(
     private _payload: IFilterionPayload<TFilters, TOperators> = {},
   ) { }
 
-  public add<F extends keyof TFilters>(field: F, value: TFilters[F] | TFilters[F][], op: TOperators = DEFAULT_OPERATOR as TOperators): Filterion<TFilters, TOperators> {
+  public add<F extends keyof TFilters>(field: F, value: TFilters[F] | TFilters[F][], op = DEFAULT_OPERATOR as TOperators): Filterion<TFilters, TOperators> {
     if (this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
@@ -21,7 +23,7 @@ export class Filterion<TFilters = any, TOperators extends FilterionBaseOperators
     return new Filterion<TFilters, TOperators>(payloadClone);
   }
 
-  public remove<F extends keyof TFilters>(field: F, value?: TFilters[F] | TFilters[F][], op: TOperators = DEFAULT_OPERATOR as TOperators): Filterion<TFilters, TOperators> {
+  public remove<F extends keyof TFilters>(field: F, value?: TFilters[F] | TFilters[F][], op = DEFAULT_OPERATOR as TOperators): Filterion<TFilters, TOperators> {
     if (!this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
@@ -41,15 +43,15 @@ export class Filterion<TFilters = any, TOperators extends FilterionBaseOperators
     return new Filterion<TFilters, TOperators>(payloadClone);
   }
 
-  public get payload() {
+  public get payload(): IFilterionPayload<TFilters, TOperators> {
     return this._payload;
   }
 
-  public get isEmpty() {
+  public get isEmpty(): boolean {
     return Object.keys(this._payload).length === 0;
   }
 
-  public exists<F extends keyof TFilters>(field: F, value: TFilters[F] | TFilters[F][], op: TOperators = DEFAULT_OPERATOR as TOperators) {
+  public exists<F extends keyof TFilters>(field: F, value: TFilters[F] | TFilters[F][], op = DEFAULT_OPERATOR as TOperators): boolean {
     const values = Array.isArray(value) ? value : [value];
     const result = values.every((v) => !!this._payload?.[field]?.[op]?.includes(v));
     return result;
@@ -121,7 +123,7 @@ export class Filterion<TFilters = any, TOperators extends FilterionBaseOperators
     return new Filterion<TFilters, TOperators>(payloadClone);
   }
 
-  private ensureFieldValueNotEmpty<F extends keyof TFilters>(payload: IFilterionPayload<TFilters, TOperators>, field: F, op: TOperators) {
+  private ensureFieldValueNotEmpty<F extends keyof TFilters>(payload: IFilterionPayload<TFilters, TOperators>, field: F, op: TOperators): void {
     if (!payload[field]) {
       payload[field] = {};
     }
@@ -130,7 +132,7 @@ export class Filterion<TFilters = any, TOperators extends FilterionBaseOperators
     }
   }
 
-  private ensureFieldValueMeaningfull<F extends keyof TFilters>(payload: IFilterionPayload<TFilters, TOperators>, field: F, op: TOperators) {
+  private ensureFieldValueMeaningfull<F extends keyof TFilters>(payload: IFilterionPayload<TFilters, TOperators>, field: F, op: TOperators): void {
     if (payload[field]) {
       if (payload[field][op]) {
         if (!payload[field][op].length) {
@@ -143,18 +145,15 @@ export class Filterion<TFilters = any, TOperators extends FilterionBaseOperators
     }
   }
 
-  private static clonePayload<TFilters = any, TOperators extends string = string>(sourcePayload: IFilterionPayload<TFilters, TOperators>) {
+  private static clonePayload<TFilters extends {}, TOperators extends string>(sourcePayload: IFilterionPayload<TFilters, TOperators>): IFilterionPayload<TFilters, TOperators> {
     const clonedPayload = JSON.parse(JSON.stringify(sourcePayload)) as typeof sourcePayload;
     return clonedPayload;
   }
 }
 
-export type IFilterionPayload<TFilters = any, TOperators extends string = string> = {
+export type IFilterionPayload<TFilters extends {}, TOperators extends string> = {
   [f in keyof TFilters]?: {
     [o in TOperators]?: TFilters[f][];
   };
 };
 
-export type FilterionBaseOperators = '=';
-
-const DEFAULT_OPERATOR: FilterionBaseOperators = '=';

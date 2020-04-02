@@ -166,8 +166,8 @@ describe('Filterion.remove', () => {
   });
   it('Remove existing element with different operator should result in noop', () => {
     const expectedPayload = filterion.payload;
-    const newFilterionPayload = filterion
-      .remove('name', 'Max', 'weirdOperator' as any)
+    const newFilterionPayload = new Filterion<MyTestFilter, '=' | '^'>(filterion.payload)
+      .remove('name', 'Max', '^')
       .payload;
 
     expect(newFilterionPayload).toBe(expectedPayload);
