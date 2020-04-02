@@ -8,21 +8,14 @@ install:
 stages:
   - build
   - test
-  - name: publish
-    if: branch = master
+  - publish
 
 jobs:
   include:
-    - stage: build
-        script:
-          - yarn build
-    - stage: test
-        script:
-          - yarn lint
-          - yarn test
-    - stage: publish
-        script:
-          - echo publish
+    script:
+      - yarn lint
+      - yarn test
+      - yarn build
 
 cache:
   yarn: true
