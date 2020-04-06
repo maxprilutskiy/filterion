@@ -34,7 +34,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     if (this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
-    const payloadClone = Filterion.clonePayload(this.payload);
+    const payloadClone = Filterion.clonePayload(this._payload);
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
 
@@ -62,7 +62,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     if (!this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
-    const payloadClone = Filterion.clonePayload(this.payload);
+    const payloadClone = Filterion.clonePayload(this._payload);
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
 
@@ -79,13 +79,12 @@ export class Filterion<S extends {} = {}, O extends string = string> {
   }
 
   /**
-   * Filterion payload
+   * Get Filterion payload
    *
-   * @readonly
-   * @type {IFilterionPayload<S, O>}
+   * @returns {IFilterionPayload<S, O>} Filterion payload
    * @memberof Filterion
    */
-  public get payload(): IFilterionPayload<S, O> {
+  public getPayload(): IFilterionPayload<S, O> {
     return this._payload;
   }
 
@@ -138,8 +137,8 @@ export class Filterion<S extends {} = {}, O extends string = string> {
   public includes(filterion: Filterion<S, O>): boolean {
     if (this.isEmpty && filterion.isEmpty) { return true; }
 
-    const currentPayload = this.payload;
-    const externalPayload = filterion.payload;
+    const currentPayload = this._payload;
+    const externalPayload = filterion._payload;
 
     const currentKeys = Object.keys(currentPayload);
     const externalKeys = Object.keys(externalPayload);
@@ -185,7 +184,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     if (this.includes(filterion)) { return this; }
 
     const payloadClone = Filterion.clonePayload(this._payload);
-    const externalPayload = filterion.payload;
+    const externalPayload = filterion._payload;
     const externalKeys = Object.keys(externalPayload) as K[];
 
     for (const field of externalKeys) {
