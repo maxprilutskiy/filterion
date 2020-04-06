@@ -166,7 +166,8 @@ describe('Filterion.remove', () => {
   });
   it('Remove existing element with different operator should result in noop', () => {
     const expectedPayload = filterion.payload;
-    const newFilterionPayload = new Filterion<MyTestFilter, '=' | '^'>(filterion.payload)
+    const newFilterionPayload = new Filterion<MyTestFilter, '=' | '^'>()
+      .attach(filterion.payload)
       .remove('name', 'Max', '^')
       .payload;
 
