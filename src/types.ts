@@ -1,9 +1,14 @@
-export type IFilterionPayload<TFilters extends {}, TOperators extends string> = {
-  [f in keyof TFilters]?: IFilterionPartialPayload<f, TFilters, TOperators>;
+export type IFilterionPayload<TFilters extends {}> = {
+  [f in keyof TFilters]?: {
+    [op: string]: TFilters[f][];
+  };
 };
 
-export type IFilterionPartialPayload<f extends keyof TFilters, TFilters extends {}, TOperators extends string> = {
-  [o in TOperators]?: TFilters[f][];
-};
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+export type IFilterionConfig<TFilters extends {} = {}> = {
+  operators: string[];
+  defaultOperator: string;
+}
 
 export type MaybeArray<T> = T | T[];
