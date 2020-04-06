@@ -301,6 +301,31 @@ describe('Filterion.isEmpty', () => {
   });
 });
 
+describe('Filterion.getPayload', () => {
+  it('Newly created instance has empty payload', () => {
+    const expectedPayload = {};
+
+    const payload = new Filterion<MyTestFilter>()
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
+  it('Payload has valid format', () => {
+    const expectedPayload = {
+      name: { '=': ['Max'] },
+      age: { '>': [0], '<': [100] },
+    };
+
+    const payload = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('age', 0, '>')
+      .add('age', 100, '<')
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
+});
+
 type MyTestFilter = {
   name: string;
   age: number;
