@@ -10,12 +10,15 @@ import { IFilterionPayload, MaybeArray } from './types';
  * @template O Operators union type
  */
 export class Filterion<S extends {} = {}, O extends string = string> {
+  private _payload: IFilterionPayload<S, O> = {}
   /**
    * Creates an instance of Filterion
    * @param {IFilterionPayload<S, O>} [_payload={}]
    * @memberof Filterion
    */
-  public constructor(private _payload: IFilterionPayload<S, O> = {}) { }
+  public constructor() {
+    // TODO
+  }
 
   /**
    * Add new filter value
@@ -42,7 +45,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
       payloadClone[field][op].push(v);
     }
 
-    return new Filterion<S, O>(payloadClone);
+    return new Filterion<S, O>().attach(payloadClone);
   }
 
   /**
@@ -72,7 +75,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     }
 
     this.ensureFieldValueMeaningfull(payloadClone, field, op);
-    return new Filterion<S, O>(payloadClone);
+    return new Filterion<S, O>().attach(payloadClone);
   }
 
   /**
@@ -197,7 +200,7 @@ export class Filterion<S extends {} = {}, O extends string = string> {
       }
     }
 
-    return new Filterion<S, O>(payloadClone);
+    return new Filterion<S, O>().attach(payloadClone);
   }
 
   public attach(payload: IFilterionPayload<S, O>): this {
