@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/prilutskiy/filterion/compare/v1.2.0...v1.2.1) (2020-04-06)
+
+
+### Bug Fixes
+
+* fixed output when passed into JSON.stringify ([#19](https://github.com/prilutskiy/filterion/issues/19)) ([4682ad7](https://github.com/prilutskiy/filterion/commit/4682ad7623499511ea60b45aa0d5551849e85838))
+
 # [1.2.0](https://github.com/prilutskiy/filterion/compare/v1.1.0...v1.2.0) (2020-04-06)
 
 
