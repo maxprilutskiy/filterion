@@ -1,6 +1,6 @@
 {
   "name": "filterion",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Data structure for filter criteria management",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -35,7 +35,8 @@
     "clean": "rm -rf build coverage",
     "build": "tsc",
     "test": "jest",
-    "lint": "eslint . --ext .js,.ts"
+    "lint": "eslint . --ext .js,.ts",
+    "prepublishOnly": "yarn test && yarn build"
   },
   "files": [
     "build"
