@@ -201,10 +201,20 @@ export class Filterion<S extends {} = {}> {
     return new Filterion<S>(this.config).attach(payloadClone);
   }
 
+  /*
+   * Attach existing payload
+   */
   public attach(payload: IFilterionPayload<S>): Filterion<S> {
     const result = new Filterion<S>(this.config);
     result.payload = payload;
     return result;
+  }
+
+  /*
+   * Get JSON representation of the instance
+   */
+  public toJSON(): IFilterionPayload<S> {
+    return this.payload;
   }
 
   /**

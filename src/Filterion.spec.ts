@@ -509,6 +509,28 @@ describe('filterion.getValues', () => {
   });
 });
 
+describe('filterion.toJSON', () => {
+  it('stringified representation matches the payload repesentation', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const payload = filterion.getPayload();
+
+    const json = JSON.stringify(filterion);
+    const payloadJson = JSON.stringify(payload);
+
+    expect(json).toStrictEqual(payloadJson);
+  });
+  it('toJSON result matches the payload', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const payload = filterion.getPayload();
+
+    const toJsonResult = filterion.toJSON();
+
+    expect(toJsonResult).toStrictEqual(payload);
+  })
+});
+
 type MyTestFilter = {
   name: string;
   age: number;
