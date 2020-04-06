@@ -10,6 +10,6 @@
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   "testMatch": [
-    "**/*.(ts|tsx)"
+    "**/*.spec.(ts|tsx)"
   ]
 }
