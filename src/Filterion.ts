@@ -1,40 +1,51 @@
-import { DEFAULT_OPERATOR } from './constants';
-import { IFilterionPayload, MaybeArray, IFilterionPartialPayload } from './types';
+import { DEFAULT_CONFIG } from './constants';
+import { IFilterionPayload, MaybeArray, IFilterionConfig } from './types';
 
 /**
  * A data structure for filter criteria management
  *
- * @export
- * @class Filterion
- * @template S Filter interface
- * @template O Operators union type
  */
-export class Filterion<S extends {} = {}, O extends string = string> {
-  private _payload: IFilterionPayload<S, O> = {}
+export class Filterion<S extends {} = {}> {
+  private static config: IFilterionConfig = DEFAULT_CONFIG;
+
+  private payload: IFilterionPayload<S> = {};
+  private config: IFilterionConfig<S> = Filterion.config;
+
+  /**
+   * Set global configuration
+   */
+  public static configure(config?: Partial<IFilterionConfig>): void {
+    Filterion.initConfig(
+      config,
+      (c) => Filterion.config = c,
+    );
+  }
+
+  /**
+   * Get global configuration
+   */
+  public static getConfig(): IFilterionConfig {
+    return Filterion.config;
+  }
+
   /**
    * Creates an instance of Filterion
-   * @param {IFilterionPayload<S, O>} [_payload={}]
-   * @memberof Filterion
    */
-  public constructor() {
-    // TODO
+  public constructor(config?: Partial<IFilterionConfig<S>>) {
+    Filterion.initConfig(
+      config,
+      (c) => this.config = c,
+    );
   }
 
   /**
    * Add new filter value
-   *
-   * @template K Type of the filter key
-   * @param {K} field Filter key
-   * @param {MaybeArray<S[K]>} value Filter value or array of such values
-   * @param {*} [op=DEFAULT_OPERATOR as O] Operator
-   * @returns {Filterion<S, O>} New Filterion instance
-   * @memberof Filterion
    */
-  public add<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = DEFAULT_OPERATOR as O): Filterion<S, O> {
+  public add<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = this.config.defaultOperator): Filterion<S> {
     if (this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
-    const payloadClone = Filterion.clonePayload(this._payload);
+    const payloadClone = Filterion.clonePayload(this.payload);
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
 
@@ -45,24 +56,17 @@ export class Filterion<S extends {} = {}, O extends string = string> {
       payloadClone[field][op].push(v);
     }
 
-    return new Filterion<S, O>().attach(payloadClone);
+    return new Filterion<S>(this.config).attach(payloadClone);
   }
 
   /**
    * Remove filter value
-   *
-   * @template K Type of the filter key
-   * @param {K} field Filter key
-   * @param {MaybeArray<S[K]>} [value] Filter value or array of such values
-   * @param {*} [op=DEFAULT_OPERATOR as O] Operator
-   * @returns {Filterion<S, O>} New Filterion instance
-   * @memberof Filterion
    */
-  public remove<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = DEFAULT_OPERATOR as O): Filterion<S, O> {
+  public remove<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = this.config.defaultOperator): Filterion<S> {
     if (!this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
-    const payloadClone = Filterion.clonePayload(this._payload);
+    const payloadClone = Filterion.clonePayload(this.payload);
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
 
@@ -75,33 +79,28 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     }
 
     this.ensureFieldValueMeaningfull(payloadClone, field, op);
-    return new Filterion<S, O>().attach(payloadClone);
+    return new Filterion<S>(this.config).attach(payloadClone);
   }
 
   /**
    * Get Filterion payload
-   *
-   * @returns {IFilterionPayload<S, O>} Filterion payload
-   * @memberof Filterion
    */
-  public getPayload(): IFilterionPayload<S, O> {
-    return this._payload;
+  public getPayload(): IFilterionPayload<S> {
+    return this.payload;
   }
 
   /**
    * Get Filterion partial payload
-   *
-   * @template K Type of the filter key
-   * @param {K} field Filter key
-   * @returns {IFilterionPartialPayload<K, S, O>} Filterion partial payload
-   * @memberof Filterion
    */
-  public getPartialPayload<K extends keyof S>(field: K): IFilterionPartialPayload<K, S, O> {
-    const result = this._payload[field] || {};
+  public getPartialPayload<K extends keyof S>(field: K): IFilterionPayload<S>[K] {
+    const result = this.payload[field] || {};
     return result;
   }
 
-  public getValues<K extends keyof S>(field: K, op = DEFAULT_OPERATOR as O): S[K][] {
+  /**
+   * Get Filterion filter values
+   */
+  public getValues<K extends keyof S>(field: K, op = this.config.defaultOperator): S[K][] {
     const getPartialPayload = this.getPartialPayload(field);
     const result = getPartialPayload[op] || [];
     return result;
@@ -109,55 +108,41 @@ export class Filterion<S extends {} = {}, O extends string = string> {
 
   /**
    * Check whether current instance contains any filters values
-   *
-   * @readonly
-   * @type {boolean}
-   * @memberof Filterion
    */
   public get isEmpty(): boolean {
-    return Object.keys(this._payload).length === 0;
+    return Object.keys(this.payload).length === 0;
+  }
+
+  public getConfig(): IFilterionConfig<S> {
+    return this.config;
   }
 
   /**
    * Check if value exists for a given filter
-   *
-   * @template K Type of the filter key
-   * @param {K} field Filter key
-   * @param {MaybeArray<S[K]>} value Filter value or array of such values
-   * @param {*} [op=DEFAULT_OPERATOR as O] Operator
-   * @returns {boolean} Check result
-   * @memberof Filterion
    */
-  public exists<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = DEFAULT_OPERATOR as O): boolean {
+  public exists<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = this.config.defaultOperator): boolean {
     const values = Array.isArray(value) ? value : [value];
-    const result = values.every((v) => !!this._payload?.[field]?.[op]?.includes(v));
+    const result = values.every((v) => !!this.payload?.[field]?.[op]?.includes(v));
     return result;
   }
 
   /**
    * Produces empty Filterion instance
-   *
-   * @returns {Filterion<S, O>} Filterion instance
-   * @memberof Filterion
    */
-  public clear(): Filterion<S, O> {
+  public clear(): Filterion<S> {
     if (this.isEmpty) { return this; }
 
-    return new Filterion<S, O>();
+    return new Filterion<S>(this.config);
   }
 
   /**
    * Check if Filterion instance is a superset of another Filterion instance
-   *
-   * @param {Filterion<S, O>} filterion A Filterion instance to check against
-   * @returns {boolean} Check result
-   * @memberof Filterion
    */
-  public includes(filterion: Filterion<S, O>): boolean {
+  public includes(filterion: Filterion<S>): boolean {
     if (this.isEmpty && filterion.isEmpty) { return true; }
 
-    const currentPayload = this._payload;
-    const externalPayload = filterion._payload;
+    const currentPayload = this.payload;
+    const externalPayload = filterion.payload;
 
     const currentKeys = Object.keys(currentPayload);
     const externalKeys = Object.keys(externalPayload);
@@ -191,23 +176,18 @@ export class Filterion<S extends {} = {}, O extends string = string> {
 
   /**
    * Merge with another Filterion instance
-   *
-   * @template K Type of the filter key
-   * @param {Filterion<S, O>} filterion Filterion instance
-   * @returns {Filterion<S, O>} New Filterion instance
-   * @memberof Filterion
    */
-  public concat<K extends keyof S>(filterion: Filterion<S, O>): Filterion<S, O> {
+  public concat<K extends keyof S>(filterion: Filterion<S>): Filterion<S> {
     if (filterion.isEmpty) { return this; }
     if (this.isEmpty) { return filterion; }
     if (this.includes(filterion)) { return this; }
 
-    const payloadClone = Filterion.clonePayload(this._payload);
-    const externalPayload = filterion._payload;
+    const payloadClone = Filterion.clonePayload(this.payload);
+    const externalPayload = filterion.payload;
     const externalKeys = Object.keys(externalPayload) as K[];
 
     for (const field of externalKeys) {
-      const externalOperators = Object.keys(externalPayload[field]) as O[];
+      const externalOperators = Object.keys(externalPayload[field]);
       for (const op of externalOperators) {
         this.ensureFieldValueNotEmpty(payloadClone, field, op);
         const externalItems = externalPayload[field][op];
@@ -218,45 +198,33 @@ export class Filterion<S extends {} = {}, O extends string = string> {
       }
     }
 
-    return new Filterion<S, O>().attach(payloadClone);
+    return new Filterion<S>(this.config).attach(payloadClone);
   }
 
-  public attach(payload: IFilterionPayload<S, O>): Filterion<S, O> {
-    const result = new Filterion<S, O>();
-    result._payload = payload;
+  public attach(payload: IFilterionPayload<S>): Filterion<S> {
+    const result = new Filterion<S>(this.config);
+    result.payload = payload;
     return result;
   }
 
   /**
    * Initialize payload"s values collection if it doesn"t exist yet
-   *
-   * @private
-   * @template K Type of the filter key
-   * @param {IFilterionPayload<S, O>} payload Filterion payload
-   * @param {K} field Filter key
-   * @param {O} op Operator
-   * @memberof Filterion
    */
-  private ensureFieldValueNotEmpty<K extends keyof S>(payload: IFilterionPayload<S, O>, field: K, op: O): void {
+  private ensureFieldValueNotEmpty<K extends keyof S>(payload: IFilterionPayload<S>, field: K, op: string): void {
     if (!payload[field]) {
       payload[field] = {};
     }
     if (!payload[field][op]) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
       payload[field][op] = [];
     }
   }
 
   /**
    * Remove values collection from a payload object if it"s empty
-   *
-   * @private
-   * @template K
-   * @param {IFilterionPayload<S, O>} payload
-   * @param {K} field
-   * @param {O} op
-   * @memberof Filterion
    */
-  private ensureFieldValueMeaningfull<K extends keyof S>(payload: IFilterionPayload<S, O>, field: K, op: O): void {
+  private ensureFieldValueMeaningfull<K extends keyof S>(payload: IFilterionPayload<S>, field: K, op: string): void {
     if (payload[field]) {
       if (payload[field][op]) {
         if (!payload[field][op].length) {
@@ -271,17 +239,37 @@ export class Filterion<S extends {} = {}, O extends string = string> {
 
   /**
    * Create a copy of a Filterion payload
-   *
-   * @private
-   * @static
-   * @template S Filter interface
-   * @template O Operators union type
-   * @param {IFilterionPayload<S, O>} sourcePayload Source Filterion payload
-   * @returns {IFilterionPayload<S, O>} Filterion payload copy
-   * @memberof Filterion
    */
-  private static clonePayload<S extends {}, O extends string>(sourcePayload: IFilterionPayload<S, O>): IFilterionPayload<S, O> {
+  private static clonePayload<S extends {}>(sourcePayload: IFilterionPayload<S>): IFilterionPayload<S> {
     const clonedPayload = JSON.parse(JSON.stringify(sourcePayload)) as typeof sourcePayload;
     return clonedPayload;
+  }
+
+  /**
+   * Initialize configuration using provided setter
+   */
+  private static initConfig(config: Partial<IFilterionConfig>, setConfig: (c: IFilterionConfig) => void): void {
+    if (!config) { return; }
+    const newConfig = {
+      ...Filterion.config,
+      ...config,
+    };
+    Filterion.validateConfig(newConfig);
+    setConfig(newConfig);
+  }
+
+  /**
+   * Validate configuration object
+   */
+  private static validateConfig(config: IFilterionConfig): void {
+    if (!config.defaultOperator) {
+      throw new Error('Default operator not found');
+    }
+    if (!config.operators?.length) {
+      throw new Error('No operators found');
+    }
+    if (!config.operators.includes(config.defaultOperator)) {
+      throw new Error('Default operator must be included in operators list');
+    }
   }
 }

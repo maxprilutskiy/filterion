@@ -1,12 +1,75 @@
 import { Filterion } from './Filterion';
+import { DEFAULT_CONFIG } from './constants';
 
-describe('Filterion.add', () => {
+describe('new Filterion', () => {
+  it('Global config falls back to the default config', () => {
+    const expectedConfig = DEFAULT_CONFIG;
+
+    const config = Filterion.getConfig();
+
+    expect(config).toStrictEqual(expectedConfig);
+  });
+  it('Falls back to the global config', () => {
+    const expectedConfig = Filterion.getConfig();
+
+    const config = new Filterion<MyTestFilter>()
+      .getConfig();
+
+    expect(config).toStrictEqual(expectedConfig);
+  });
+  it('Provided config should be merged with the global config', () => {
+    const globalConfig = Filterion.getConfig();
+    const expectedConfig = {
+      ...globalConfig,
+      operators: ['=', '!='],
+    };
+
+    const config = new Filterion<MyTestFilter>({ operators: ['=', '!='] })
+      .getConfig();
+
+    expect(config).toStrictEqual(expectedConfig);
+  });
+  it('Cannot have empty defaultOperator', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>({ defaultOperator: '' });
+
+    expect(ctor).toThrow();
+  });
+  it('Cannot have no operators', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>({ operators: null });
+
+    expect(ctor).toThrow();
+  });
+  it('Cannot have empty operators', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>({ operators: [] });
+
+    expect(ctor).toThrow();
+  });
+  it('Operators must contain the default operator', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>({ operators: [] });
+
+    expect(ctor).toThrow();
+  });
+});
+
+describe('filterion.add', () => {
   it('Adding a filter produces a new instance', () => {
     const filterion = new Filterion<MyTestFilter>();
 
     const modifiedFilterion = filterion.add('name', 'Max');
 
     expect(modifiedFilterion).not.toBe(filterion);
+  });
+  it('New instance is constructed with the same config', () => {
+    const filterion = new Filterion<MyTestFilter>();
+    const expectedConfig = filterion.getConfig();
+
+    const config = filterion.add('name', 'Max').getConfig();
+
+    expect(config).toStrictEqual(expectedConfig);
   });
   it('Adding an array of filter values produces a new instance', () => {
     const filterion = new Filterion<MyTestFilter>();
@@ -69,7 +132,7 @@ describe('Filterion.add', () => {
   });
 });
 
-describe('Filterion.exists', () => {
+describe('filterion.exists', () => {
   it('Value should exist after it was added', () => {
     const filterion = new Filterion<MyTestFilter>()
       .add('name', 'Max');
@@ -128,7 +191,7 @@ describe('Filterion.exists', () => {
   });
 });
 
-describe('Filterion.remove', () => {
+describe('filterion.remove', () => {
   const filterion = new Filterion<MyTestFilter>()
     .add('name', 'Max');
 
@@ -146,6 +209,15 @@ describe('Filterion.remove', () => {
       .remove('name', 'John');
 
     expect(newFilterion).toBe(filterion);
+  });
+  it('New instance is constructed with the same config', () => {
+    const expectedConfig = filterion.getConfig();
+
+    const newConfig = filterion
+      .remove('name', 'John')
+      .getConfig();
+
+    expect(newConfig).toStrictEqual(expectedConfig);
   });
   it('Remove existing element', () => {
     const expectedPayload = {};
@@ -166,7 +238,7 @@ describe('Filterion.remove', () => {
   });
   it('Remove existing element with different operator should result in noop', () => {
     const expectedPayload = filterion.getPayload();
-    const newFilterionPayload = new Filterion<MyTestFilter, '=' | '^'>()
+    const newFilterionPayload = new Filterion<MyTestFilter>()
       .attach(filterion.getPayload())
       .remove('name', 'Max', '^')
       .getPayload();
@@ -175,7 +247,7 @@ describe('Filterion.remove', () => {
   });
 });
 
-describe('Filterion.includes', () => {
+describe('filterion.includes', () => {
   const filterion = new Filterion<MyTestFilter>()
     .add('name', ['Max', 'John']);
 
@@ -198,8 +270,35 @@ describe('Filterion.includes', () => {
   });
 });
 
-describe('Filterion.concat', () => {
-  it('Concat should merge to filterions', () => {
+describe('filterion.concat', () => {
+  it('Concat produces a new instance', () => {
+    const filterion1 = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const filterion2 = new Filterion<MyTestFilter>()
+      .add('name', 'John');
+
+    const finalPayload = filterion1
+      .concat(filterion2);
+
+    expect(finalPayload).not.toBe(filterion1);
+    expect(finalPayload).not.toBe(filterion2);
+  });
+  it('New instance is constructed with the same config as the target instance', () => {
+    const filterion1 = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const filterion1Config = filterion1.getConfig();
+    const filterion2 = new Filterion<MyTestFilter>({ defaultOperator: '=', operators: ['=', '!='] })
+      .add('name', 'John');
+    const filterion2Config = filterion2.getConfig();
+
+    const finalConfig = filterion1
+      .concat(filterion2)
+      .getConfig();
+
+    expect(finalConfig).toStrictEqual(filterion1Config);
+    expect(finalConfig).not.toStrictEqual(filterion2Config);
+  });
+  it('Concat should merge two filterions', () => {
     const filterion1 = new Filterion<MyTestFilter>()
       .add('name', 'Max');
     const filterion2 = new Filterion<MyTestFilter>()
@@ -228,7 +327,7 @@ describe('Filterion.concat', () => {
   });
 });
 
-describe('Filterion.clear', () => {
+describe('filterion.clear', () => {
   it('Clear should produce empty filterion', () => {
     const filterion = new Filterion<MyTestFilter>()
       .add('name', 'Max');
@@ -240,6 +339,17 @@ describe('Filterion.clear', () => {
 
     expect(filterionPayload).toStrictEqual(expectedPayload);
   });
+  it('New instance is constructed with the same config', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const expectedConfig = filterion.getConfig();
+
+    const filterionConfig = filterion
+      .clear()
+      .getConfig();
+
+    expect(filterionConfig).toStrictEqual(expectedConfig);
+  });
   it('Clearing empty filterion should not produce new isntance', () => {
     const filterion = new Filterion<MyTestFilter>();
 
@@ -249,7 +359,7 @@ describe('Filterion.clear', () => {
   });
 });
 
-describe('Filterion.attach', () => {
+describe('filterion.attach', () => {
   it('Attached payload is accessible', () => {
     const payload = { name: { '=': ['Max'] } };
     const expectedPayload = payload;
@@ -269,6 +379,17 @@ describe('Filterion.attach', () => {
 
     expect(filterion).not.toBe(initialFilterion);
   });
+  it('New instance is constructed with the same config', () => {
+    const payload = { name: { '=': ['Max'] } };
+    const initialFilterion = new Filterion<MyTestFilter>();
+    const expectedConfig = initialFilterion.getConfig();
+
+    const filterionConfig = initialFilterion
+      .attach(payload)
+      .getConfig();
+
+    expect(filterionConfig).toStrictEqual(expectedConfig);
+  });
   it('Attached payload overrides existing payload', () => {
     const filterion = new Filterion<MyTestFilter>()
       .add('age', 0);
@@ -285,7 +406,7 @@ describe('Filterion.attach', () => {
   });
 });
 
-describe('Filterion.isEmpty', () => {
+describe('filterion.isEmpty', () => {
   it('Newly created instance is empty', () => {
     const isEmpty = new Filterion<MyTestFilter>()
       .isEmpty;
@@ -301,7 +422,7 @@ describe('Filterion.isEmpty', () => {
   });
 });
 
-describe('Filterion.getPayload', () => {
+describe('filterion.getPayload', () => {
   it('Newly created instance has empty payload', () => {
     const expectedPayload = {};
 
@@ -325,7 +446,8 @@ describe('Filterion.getPayload', () => {
     expect(payload).toStrictEqual(expectedPayload);
   });
 });
-describe('Filterion.getPartialPayload', () => {
+
+describe('filterion.getPartialPayload', () => {
   it('Partial payload is an empty object when no data', () => {
     const payload = new Filterion<MyTestFilter>()
       .getPartialPayload('name');
@@ -345,7 +467,7 @@ describe('Filterion.getPartialPayload', () => {
   });
 });
 
-describe('Filterion.getValues', () => {
+describe('filterion.getValues', () => {
   it('Values is empty array when no data', () => {
     const values = new Filterion<MyTestFilter>()
       .getValues('name');
