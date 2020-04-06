@@ -325,6 +325,53 @@ describe('Filterion.getPayload', () => {
     expect(payload).toStrictEqual(expectedPayload);
   });
 });
+describe('Filterion.getPartialPayload', () => {
+  it('Partial payload is an empty object when no data', () => {
+    const payload = new Filterion<MyTestFilter>()
+      .getPartialPayload('name');
+
+    expect(payload).toStrictEqual({});
+  });
+  it('Partial payload has valid format', () => {
+    const expectedPartialPayload = { '>': [0], '<': [100] }
+
+    const payload = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('age', 0, '>')
+      .add('age', 100, '<')
+      .getPartialPayload('age');
+
+    expect(payload).toStrictEqual(expectedPartialPayload);
+  });
+});
+
+describe('Filterion.getValues', () => {
+  it('Values is empty array when no data', () => {
+    const values = new Filterion<MyTestFilter>()
+      .getValues('name');
+
+    expect(values).toStrictEqual([]);
+  });
+  it('Values has valid format', () => {
+    const expectedValues = [100];
+
+    const values = new Filterion<MyTestFilter>()
+      .add('age', 100, '<')
+      .getValues('age', '<');
+
+    expect(values).toStrictEqual(expectedValues);
+  });
+  it('Fallbacks to the default operator when no op is specified', () => {
+    const expectedValues = ['Max'];
+
+    const values = new Filterion<MyTestFilter>()
+      .add('name', 'Max', '=')
+      .add('age', 100, '<')
+      .getValues('name');
+
+    expect(values).toStrictEqual(expectedValues);
+  });
+});
 
 type MyTestFilter = {
   name: string;

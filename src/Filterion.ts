@@ -1,5 +1,5 @@
 import { DEFAULT_OPERATOR } from './constants';
-import { IFilterionPayload, MaybeArray } from './types';
+import { IFilterionPayload, MaybeArray, IFilterionPartialPayload } from './types';
 
 /**
  * A data structure for filter criteria management
@@ -86,6 +86,25 @@ export class Filterion<S extends {} = {}, O extends string = string> {
    */
   public getPayload(): IFilterionPayload<S, O> {
     return this._payload;
+  }
+
+  /**
+   * Get Filterion partial payload
+   *
+   * @template K Type of the filter key
+   * @param {K} field Filter key
+   * @returns {IFilterionPartialPayload<K, S, O>} Filterion partial payload
+   * @memberof Filterion
+   */
+  public getPartialPayload<K extends keyof S>(field: K): IFilterionPartialPayload<K, S, O> {
+    const result = this._payload[field] || {};
+    return result;
+  }
+
+  public getValues<K extends keyof S>(field: K, op = DEFAULT_OPERATOR as O): S[K][] {
+    const getPartialPayload = this.getPartialPayload(field);
+    const result = getPartialPayload[op] || [];
+    return result;
   }
 
   /**
