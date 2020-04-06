@@ -200,6 +200,11 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     return new Filterion<S, O>(payloadClone);
   }
 
+  public attach(payload: IFilterionPayload<S, O>): this {
+    this._payload = payload;
+    return this;
+  }
+
   /**
    * Initialize payload"s values collection if it doesn"t exist yet
    *

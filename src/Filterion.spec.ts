@@ -248,6 +248,42 @@ describe('Filterion.clear', () => {
   });
 });
 
+describe('Filterion.attach', () => {
+  it('Attached payload is accessible', () => {
+    const payload = { name: { '=': ['Max'] } };
+    const expectedPayload = payload;
+
+    const actualPayload = new Filterion<MyTestFilter>()
+      .attach(payload)
+      .payload;
+
+    expect(actualPayload).toStrictEqual(expectedPayload);
+  });
+  it('Attach doesnt produce a new instance', () => {
+    const payload = { name: { '=': ['Max'] } };
+    const initialFilterion = new Filterion<MyTestFilter>();
+
+    const filterion = initialFilterion
+      .attach(payload);
+
+    expect(filterion).toBe(initialFilterion);
+  });
+  it('Attached payload overrides existing payload', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('age', 0);
+    const payload = { name: { '=': ['Max'] } };
+    const expectedPayload = {
+      name: { '=': ['Max'] },
+    };
+
+    const actualPayload = filterion
+      .attach(payload)
+      .payload;
+
+    expect(actualPayload).toStrictEqual(expectedPayload);
+  });
+});
+
 type MyTestFilter = {
   name: string;
   age: number;
