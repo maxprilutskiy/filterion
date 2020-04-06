@@ -203,9 +203,10 @@ export class Filterion<S extends {} = {}, O extends string = string> {
     return new Filterion<S, O>().attach(payloadClone);
   }
 
-  public attach(payload: IFilterionPayload<S, O>): this {
-    this._payload = payload;
-    return this;
+  public attach(payload: IFilterionPayload<S, O>): Filterion<S, O> {
+    const result = new Filterion<S, O>();
+    result._payload = payload;
+    return result;
   }
 
   /**

@@ -260,14 +260,14 @@ describe('Filterion.attach', () => {
 
     expect(actualPayload).toStrictEqual(expectedPayload);
   });
-  it('Attach doesnt produce a new instance', () => {
+  it('Attach produces a new instance', () => {
     const payload = { name: { '=': ['Max'] } };
     const initialFilterion = new Filterion<MyTestFilter>();
 
     const filterion = initialFilterion
       .attach(payload);
 
-    expect(filterion).toBe(initialFilterion);
+    expect(filterion).not.toBe(initialFilterion);
   });
   it('Attached payload overrides existing payload', () => {
     const filterion = new Filterion<MyTestFilter>()
