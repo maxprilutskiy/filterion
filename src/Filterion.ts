@@ -268,7 +268,7 @@ export class Filterion<S extends {} = {}> {
     if (!config.operators?.length) {
       throw new Error('No operators found');
     }
-    if (!config.operators.includes(config.defaultOperator)) {
+    if (!config.operators?.includes(config.defaultOperator)) {
       throw new Error('Default operator must be included in operators list');
     }
   }

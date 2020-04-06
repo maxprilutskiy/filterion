@@ -63,7 +63,7 @@ describe('new Filterion', () => {
   });
   it('Operators must contain the default operator', () => {
     const ctor = (): Filterion =>
-      new Filterion<MyTestFilter>({ operators: [] });
+      new Filterion<MyTestFilter>({ operators: ['<'] });
 
     expect(ctor).toThrow();
   });
