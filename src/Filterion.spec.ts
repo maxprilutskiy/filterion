@@ -285,6 +285,22 @@ describe('Filterion.attach', () => {
   });
 });
 
+describe('Filterion.isEmpty', () => {
+  it('Newly created instance is empty', () => {
+    const isEmpty = new Filterion<MyTestFilter>()
+      .isEmpty;
+
+    expect(isEmpty).toBe(true);
+  });
+  it('Instance with data is not empty', () => {
+    const isEmpty = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .isEmpty;
+
+    expect(isEmpty).toBe(false);
+  });
+});
+
 type MyTestFilter = {
   name: string;
   age: number;
