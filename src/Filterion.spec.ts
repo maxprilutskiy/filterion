@@ -1,6 +1,20 @@
 import { Filterion } from './Filterion';
 import { DEFAULT_CONFIG } from './constants';
 
+describe('Filterion.configure', () => {
+  afterEach(() => {
+    Filterion.configure(DEFAULT_CONFIG);
+  });
+  it('Global config is used by default', () => {
+    Filterion.configure({ operators: ['=', '!='] });
+    const expectedConfig = Filterion.getConfig();
+
+    const config = new Filterion().getConfig();
+
+    expect(config).toStrictEqual(expectedConfig);
+  });
+});
+
 describe('new Filterion', () => {
   it('Global config falls back to the default config', () => {
     const expectedConfig = DEFAULT_CONFIG;
