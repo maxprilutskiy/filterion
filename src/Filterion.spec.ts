@@ -21,7 +21,7 @@ describe('Filterion.add', () => {
 
     const filterionPayload = filterion
       .add('name', 'Max')
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toEqual(expectedPayload);
   });
@@ -31,39 +31,39 @@ describe('Filterion.add', () => {
 
     const filterionPayload = filterion
       .add('name', ['Max', 'John'])
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toEqual(expectedPayload);
   });
   it('Adding a filter uses = operator by default', () => {
     const filterion = new Filterion<MyTestFilter>();
-    const expectedPayload: typeof filterion.payload = { name: { '=': ['Max'] } };
+    const expectedPayload = { name: { '=': ['Max'] } };
 
     const filterionPayload = filterion
       .add('name', 'Max')
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toStrictEqual(expectedPayload);
   });
   it('Adding a filter twice should be a noop', () => {
     const filterion = new Filterion<MyTestFilter>();
-    const expectedPayload: typeof filterion.payload = { name: { '=': ['Max'] } };
+    const expectedPayload = { name: { '=': ['Max'] } };
 
     const filterionPayload = filterion
       .add('name', 'Max')
       .add('name', 'Max')
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toStrictEqual(expectedPayload);
   });
   it('Adding a filter twice should not produce another instance', () => {
     const filterion = new Filterion<MyTestFilter>()
       .add('name', 'Max');
-    const expectedPayload = filterion.payload;
+    const expectedPayload = filterion.getPayload();
 
     const filterionPayload = filterion
       .add('name', 'Max')
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toBe(expectedPayload);
   });
@@ -137,7 +137,7 @@ describe('Filterion.remove', () => {
 
     const filterionPayload = filterion
       .remove('name', 'John')
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toEqual(expectedPayload);
   });
@@ -151,7 +151,7 @@ describe('Filterion.remove', () => {
     const expectedPayload = {};
     const newFilterionPayload = filterion
       .remove('name', 'Max')
-      .payload;
+      .getPayload();
 
     expect(newFilterionPayload).toStrictEqual(expectedPayload);
   });
@@ -160,16 +160,16 @@ describe('Filterion.remove', () => {
     const newFilterionPayload = filterion
       .add('name', 'John')
       .remove('name', ['Max', 'John'])
-      .payload;
+      .getPayload();
 
     expect(newFilterionPayload).toStrictEqual(expectedPayload);
   });
   it('Remove existing element with different operator should result in noop', () => {
-    const expectedPayload = filterion.payload;
+    const expectedPayload = filterion.getPayload();
     const newFilterionPayload = new Filterion<MyTestFilter, '=' | '^'>()
-      .attach(filterion.payload)
+      .attach(filterion.getPayload())
       .remove('name', 'Max', '^')
-      .payload;
+      .getPayload();
 
     expect(newFilterionPayload).toBe(expectedPayload);
   });
@@ -208,7 +208,7 @@ describe('Filterion.concat', () => {
 
     const finalPayload = filterion1
       .concat(filterion2)
-      .payload;
+      .getPayload();
 
     expect(finalPayload).toStrictEqual(expectedPayload);
   });
@@ -222,7 +222,7 @@ describe('Filterion.concat', () => {
 
     const finalPayload = filterion1
       .concat(filterion2)
-      .payload;
+      .getPayload();
 
     expect(finalPayload).toStrictEqual(expectedPayload);
   });
@@ -236,7 +236,7 @@ describe('Filterion.clear', () => {
 
     const filterionPayload = filterion
       .clear()
-      .payload;
+      .getPayload();
 
     expect(filterionPayload).toStrictEqual(expectedPayload);
   });
@@ -256,7 +256,7 @@ describe('Filterion.attach', () => {
 
     const actualPayload = new Filterion<MyTestFilter>()
       .attach(payload)
-      .payload;
+      .getPayload();
 
     expect(actualPayload).toStrictEqual(expectedPayload);
   });
@@ -279,7 +279,7 @@ describe('Filterion.attach', () => {
 
     const actualPayload = filterion
       .attach(payload)
-      .payload;
+      .getPayload();
 
     expect(actualPayload).toStrictEqual(expectedPayload);
   });
