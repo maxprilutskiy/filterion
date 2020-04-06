@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/prilutskiy/filterion/compare/v1.1.0...v1.2.0) (2020-04-06)
+
+
+### Features
+
+* added config support ([#18](https://github.com/prilutskiy/filterion/issues/18)) ([78f2051](https://github.com/prilutskiy/filterion/commit/78f2051a68d28752d46f31110d10cb7072588cae))
+
 # [1.1.0](https://github.com/prilutskiy/filterion/compare/v1.0.0...v1.1.0) (2020-04-06)
 
 
