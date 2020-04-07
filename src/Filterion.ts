@@ -1,11 +1,12 @@
 import { DEFAULT_CONFIG } from './constants';
 import { IFilterionPayload, MaybeArray, IFilterionConfig } from './types';
+import { parseExpression } from './utils';
 
 /**
  * A data structure for filter criteria management
  *
  */
-export class Filterion<S extends {} = {}> {
+export class Filterion<S extends {} = any> {
   private static config: IFilterionConfig = DEFAULT_CONFIG;
 
   private payload: IFilterionPayload<S> = {};
@@ -29,6 +30,23 @@ export class Filterion<S extends {} = {}> {
   }
 
   /**
+   * Create Filterion from a query string
+   */
+  public fromQueryString<S extends {} = {}>(queryString: string): Filterion<S> {
+    let startIndex = queryString.indexOf('?');
+    if (startIndex === -1) { startIndex = 0; }
+    startIndex += 1;
+
+    const result = queryString
+      .substr(startIndex)
+      .split('&')
+      .map(parseExpression(this.config.operators))
+      .reduce<Filterion<S>>((f, [field, op, value]) => f.add(field as any, value, op), new Filterion());
+
+    return result;
+  }
+
+  /**
    * Creates an instance of Filterion
    */
   public constructor(config?: Partial<IFilterionConfig<S>>) {
@@ -42,6 +60,8 @@ export class Filterion<S extends {} = {}> {
    * Add new filter value
    */
   public add<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = this.config.defaultOperator): Filterion<S> {
+    this.validateOperator(op);
+
     if (this.exists(field, value, op)) { return this; }
 
     const values = Array.isArray(value) ? value : [value];
@@ -63,10 +83,16 @@ export class Filterion<S extends {} = {}> {
    * Remove filter value
    */
   public remove<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = this.config.defaultOperator): Filterion<S> {
+    this.validateOperator(op);
+
     if (!this.exists(field, value, op)) { return this; }
 
-    const values = Array.isArray(value) ? value : [value];
     const payloadClone = Filterion.clonePayload(this.payload);
+    if (!value) {
+      delete payloadClone[field];
+      return new Filterion<S>(this.config).attach(payloadClone);
+    }
+    const values = Array.isArray(value) ? value : [value];
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
 
@@ -101,6 +127,8 @@ export class Filterion<S extends {} = {}> {
    * Get Filterion filter values
    */
   public getValues<K extends keyof S>(field: K, op = this.config.defaultOperator): S[K][] {
+    this.validateOperator(op);
+
     const getPartialPayload = this.getPartialPayload(field);
     const result = getPartialPayload[op] || [];
     return result;
@@ -121,6 +149,8 @@ export class Filterion<S extends {} = {}> {
    * Check if value exists for a given filter
    */
   public exists<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = this.config.defaultOperator): boolean {
+    this.validateOperator(op);
+
     const values = Array.isArray(value) ? value : [value];
     const result = values.every((v) => !!this.payload?.[field]?.[op]?.includes(v));
     return result;
@@ -217,6 +247,29 @@ export class Filterion<S extends {} = {}> {
     return this.payload;
   }
 
+  /*
+   * Get QueryString representation of the instance
+   */
+  public toQueryString(): string {
+    const chunks = [];
+    const fields = Object.keys(this.payload);
+    for (const field of fields) {
+      const operators = Object.keys(this.payload[field]);
+      for (const op of operators) {
+        const values = this.payload[field][op];
+        for (const value of values) {
+          const encodedField = encodeURIComponent(field);
+          const encodedValue = encodeURIComponent(value);
+          const chunk = `${encodedField}${op}${encodedValue}`;
+          chunks.push(chunk);
+        }
+      }
+    }
+
+    const result = chunks.join('&');
+    return result;
+  }
+
   /**
    * Initialize payload"s values collection if it doesn"t exist yet
    */
@@ -244,6 +297,12 @@ export class Filterion<S extends {} = {}> {
           delete payload[field];
         }
       }
+    }
+  }
+
+  private validateOperator(op: string): void {
+    if (!this.config.operators.includes(op)) {
+      throw new Error(`${op} is an invalid operator. It is missing from the operators configuration.`)
     }
   }
 
@@ -280,6 +339,14 @@ export class Filterion<S extends {} = {}> {
     }
     if (!config.operators?.includes(config.defaultOperator)) {
       throw new Error('Default operator must be included in operators list');
+    }
+    if (config.operators?.some((op) => op.includes('&'))) {
+      throw new Error('Ampersand operator is forbidden');
+    }
+    for (const op of config.operators) {
+      const encodedOp = encodeURIComponent(op);
+      if (op !== encodedOp) { continue; }
+      throw new Error(`${op} is an invalid operator. Operator's encoded value must be different from its original value`)
     }
   }
 }
