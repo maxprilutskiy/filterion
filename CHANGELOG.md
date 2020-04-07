@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/prilutskiy/filterion/compare/v1.2.1...v1.3.0) (2020-04-07)
+
+
+### Features
+
+* added query string support ([#21](https://github.com/prilutskiy/filterion/issues/21)) ([196e56a](https://github.com/prilutskiy/filterion/commit/196e56ac814320567637adc470f7a356265f16c9))
+
 ## [1.2.1](https://github.com/prilutskiy/filterion/compare/v1.2.0...v1.2.1) (2020-04-06)
 
 
