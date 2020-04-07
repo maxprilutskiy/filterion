@@ -35,7 +35,7 @@ export class Filterion<S extends {} = any> {
   public fromQueryString<S extends {} = {}>(queryString: string): Filterion<S> {
     let startIndex = queryString.indexOf('?');
     if (startIndex === -1) { startIndex = 0; }
-    startIndex += 1;
+    else { startIndex += 1; }
 
     const result = queryString
       .substr(startIndex)
