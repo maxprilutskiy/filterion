@@ -32,7 +32,8 @@ Then require it into any module:
 import { Filterion } from 'filterion';
 
 const filter = new Filterion()
-  .add('device', 'iPhone');
+  .add('device', 'iPhone')
+  .add('price', 649);
 
 console.log(filter.getPayload());
 
