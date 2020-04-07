@@ -17,6 +17,7 @@ module.exports = {
   rules: {
     quotes: ['error', 'single'],
     'no-multiple-empty-lines': ['error', { max: 1 }],
-    'no-multi-spaces': ['error']
+    'no-multi-spaces': ['error'],
+    '@typescript-eslint/no-explicit-any': ['off'],
   },
 };

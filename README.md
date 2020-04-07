@@ -32,16 +32,55 @@ Then require it into any module:
 import { Filterion } from 'filterion';
 
 const filter = new Filterion()
-  .add('device', 'iPhone')
-  .add('price', 100, '>')
-  .add('price', 200, '<');
+  .add('device', 'iPhone');
 
-console.log(filter.payload);
+console.log(filter.getPayload());
 
 /*
 {
   device: { '=': [ 'iPhone' ] },
-  price: { '>': [ 100 ], '<': [ 200 ] }
+  price: { '=': [ 649 ] }
 }
 */
+```
+
+## Usage with query strings
+
+Simple usage:
+
+```typescript
+const query = 'device=iPhone&price=649';
+
+const newQuery = new Filterion()
+  .fromQueryString(query)
+  .remove('price')
+  .add('year', 2007)
+  .toQueryString();
+
+console.log(newQuery);
+
+/*
+'device=iPhone&year=2007'
+*/
+
+```
+
+
+Advanced usage:
+
+```typescript
+const query = 'device=iPhone&price=649';
+
+const newQuery = new Filterion({ operators: ['=', '<', '>'] })
+  .fromQueryString(query)
+  .add('year', 2007, '>')
+  .add('year', 2019, '<')
+  .toQueryString();
+
+console.log(newQuery);
+
+/*
+'device=iPhone&price=649&year>2007&year<2019'
+*/
+
 ```

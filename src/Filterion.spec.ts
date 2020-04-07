@@ -67,6 +67,18 @@ describe('new Filterion', () => {
 
     expect(ctor).toThrow();
   });
+  it('Invalid operators are forbidden', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>({ operators: ['=', 'hi'] });
+
+    expect(ctor).toThrow();
+  });
+  it('Ampersand operator is forbidden', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>({ operators: ['=', '&'] });
+
+    expect(ctor).toThrow();
+  });
 });
 
 describe('filterion.add', () => {
@@ -144,6 +156,12 @@ describe('filterion.add', () => {
 
     expect(filterionPayload).toBe(expectedPayload);
   });
+  it('Adding a filter with an unknown operator results in an error', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>().add('name', 'Max', '!=');
+
+    expect(ctor).toThrow();
+  })
 });
 
 describe('filterion.exists', () => {
@@ -203,6 +221,12 @@ describe('filterion.exists', () => {
 
     expect(exists).toBeTruthy();
   });
+  it('A filter existance check performed with an unknown operator results in an error', () => {
+    const ctor = (): boolean =>
+      new Filterion<MyTestFilter>().exists('name', 'Max', '!=');
+
+    expect(ctor).toThrow();
+  });
 });
 
 describe('filterion.remove', () => {
@@ -252,13 +276,19 @@ describe('filterion.remove', () => {
   });
   it('Remove existing element with different operator should result in noop', () => {
     const expectedPayload = filterion.getPayload();
-    const newFilterionPayload = new Filterion<MyTestFilter>()
+    const newFilterionPayload = new Filterion<MyTestFilter>({ operators: ['=', '^'] })
       .attach(filterion.getPayload())
       .remove('name', 'Max', '^')
       .getPayload();
 
     expect(newFilterionPayload).toBe(expectedPayload);
   });
+  it('Removing a filter with an unknown operator results in an error', () => {
+    const ctor = (): Filterion =>
+      new Filterion<MyTestFilter>().remove('name', 'Max', '!=');
+
+    expect(ctor).toThrow();
+  })
 });
 
 describe('filterion.includes', () => {
@@ -451,7 +481,7 @@ describe('filterion.getPayload', () => {
       age: { '>': [0], '<': [100] },
     };
 
-    const payload = new Filterion<MyTestFilter>()
+    const payload = new Filterion<MyTestFilter>({ operators: ['=', '<', '>'] })
       .add('name', 'Max')
       .add('age', 0, '>')
       .add('age', 100, '<')
@@ -471,7 +501,7 @@ describe('filterion.getPartialPayload', () => {
   it('Partial payload has valid format', () => {
     const expectedPartialPayload = { '>': [0], '<': [100] }
 
-    const payload = new Filterion<MyTestFilter>()
+    const payload = new Filterion<MyTestFilter>({ operators: ['=', '<', '>'] })
       .add('name', 'Max')
       .add('age', 0, '>')
       .add('age', 100, '<')
@@ -482,6 +512,9 @@ describe('filterion.getPartialPayload', () => {
 });
 
 describe('filterion.getValues', () => {
+  beforeAll(() => Filterion.configure({ operators: ['=', '<', '>'] }));
+  afterAll(() => Filterion.configure(DEFAULT_CONFIG));
+
   it('Values is empty array when no data', () => {
     const values = new Filterion<MyTestFilter>()
       .getValues('name');
@@ -507,6 +540,12 @@ describe('filterion.getValues', () => {
 
     expect(values).toStrictEqual(expectedValues);
   });
+  it('A filter values getter invoked with an unknown operator results in an error', () => {
+    const ctor = (): string[] =>
+      new Filterion<MyTestFilter>().getValues('name', '!=');
+
+    expect(ctor).toThrow();
+  });
 });
 
 describe('filterion.toJSON', () => {
@@ -531,9 +570,52 @@ describe('filterion.toJSON', () => {
   })
 });
 
+describe('filterion.toQueryString', () => {
+  beforeAll(() => Filterion.configure({ operators: ['=', '<', '>'] }));
+  afterAll(() => Filterion.configure(DEFAULT_CONFIG));
+
+  it('emits a valid query string', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('name', '±!@#$%^&*()\'_+ ";//\\,.')
+      .add('is active', true)
+      .add('age', 0, '>')
+      .add('age', 100, '<');
+    const expectedQueryString =
+      'name=Max&name=%C2%B1!%40%23%24%25%5E%26*()\'_%2B%20%22%3B%2F%2F%5C%2C.&is%20active=true&age>0&age<100';
+
+    const queryString = filterion.toQueryString();
+
+    expect(queryString).toBe(expectedQueryString);
+  });
+});
+
+describe('Filterion.fromQueryString', () => {
+  beforeAll(() => Filterion.configure({ operators: ['=', '<', '>'] }));
+  afterAll(() => Filterion.configure(DEFAULT_CONFIG));
+
+  it('Query string parsing produces valid filterion', () => {
+    const queryString = 'http://localhost:3000?name=Max&name=%C2%B1!%40%23%24%25%5E%26*()\'_%2B%20%22%3B%2F%2F%5C%2C.&is%20active=true&age>0&age<100';
+    const expectedPayload = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('name', '±!@#$%^&*()\'_+ ";//\\,.')
+      .add('is active', true)
+      .add('age', 0, '>')
+      .add('age', 100, '<')
+      .getPayload();
+
+    const payload = new Filterion<MyTestFilter>()
+      .fromQueryString(queryString)
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  })
+});
+
 type MyTestFilter = {
   name: string;
   age: number;
   isActive: boolean;
+  'is active': boolean;
   createdAt: string;
 };
