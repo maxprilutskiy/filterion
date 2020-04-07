@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/prilutskiy/filterion/compare/v1.3.0...v1.3.1) (2020-04-07)
+
+
+### Bug Fixes
+
+* fix query string start index ([3d7cf30](https://github.com/prilutskiy/filterion/commit/3d7cf30f34a1a937736540eb4ca5255a46aee250))
+
 # [1.3.0](https://github.com/prilutskiy/filterion/compare/v1.2.1...v1.3.0) (2020-04-07)
 
 
