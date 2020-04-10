@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/prilutskiy/filterion/compare/v1.3.2...v1.4.0) (2020-04-10)
+
+
+### Features
+
+* add .equals & .getKeys ([#25](https://github.com/prilutskiy/filterion/issues/25)) ([42f834d](https://github.com/prilutskiy/filterion/commit/42f834db6388f924ab22ceb8e8e049f82a227aa5))
+
 ## [1.3.2](https://github.com/prilutskiy/filterion/compare/v1.3.1...v1.3.2) (2020-04-10)
 
 
