@@ -283,6 +283,32 @@ describe('filterion.remove', () => {
 
     expect(newFilterionPayload).toBe(expectedPayload);
   });
+  it('Removing a filter without a value should remove the filter entirely', () => {
+    const expectedPayload = { isActive: { '=': [true] } };
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('name', 'John')
+      .add('isActive', true);
+
+    const payload = filterion
+      .remove('name')
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
+  it('Removing a filter with undefined value should not remove the filter entirely', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('name', 'John')
+      .add('isActive', true);
+    const expectedPayload = filterion.getPayload();
+
+    const payload = filterion
+      .remove('name', undefined)
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
   it('Removing a filter with an unknown operator results in an error', () => {
     const ctor = (): Filterion =>
       new Filterion<MyTestFilter>().remove('name', 'Max', '!=');

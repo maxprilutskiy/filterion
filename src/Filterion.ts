@@ -85,13 +85,14 @@ export class Filterion<S extends {} = any> {
   public remove<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = this.config.defaultOperator): Filterion<S> {
     this.validateOperator(op);
 
-    if (!this.exists(field, value, op)) { return this; }
-
     const payloadClone = Filterion.clonePayload(this.payload);
-    if (!value) {
+    if (value == null && arguments.length === 1) {
       delete payloadClone[field];
       return new Filterion<S>(this.config).attach(payloadClone);
     }
+
+    if (!this.exists(field, value, op)) { return this; }
+
     const values = Array.isArray(value) ? value : [value];
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
