@@ -3,7 +3,7 @@
 <div align="center">
 An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for filter criteria management.
 </div>
-<div align="center">
+<div align="center" style="margin-top: 16px">
 
 [![Build Status](https://travis-ci.com/prilutskiy/filterion.svg?branch=master)](https://travis-ci.com/prilutskiy/filterion)
 [![codecov](https://codecov.io/gh/prilutskiy/filterion/branch/master/graph/badge.svg)](https://codecov.io/gh/prilutskiy/filterion)
@@ -11,16 +11,12 @@ An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data s
 
 </div>
 
-**Filterion** has a built-in API to work with query strings, allowing zero-effort URL manipulations.
-
 ## 📦 Install
 
-Install `filterion` using yarn or npm:
+Install `filterion` using npm:
 
-```bash
-$ yarn add filterion
-# or
-$ npm i filterion
+```
+npm i filterion
 ```
 
 ## 🔨 Usage
@@ -44,8 +40,8 @@ console.log(filter.getPayload());
 */
 ```
 
-Or leverage the query string api:
-```typescript
+Or leverage the query string API:
+```javascript
 import { Filterion } from 'filterion';
 
 const newQuery = new Filterion()
@@ -58,6 +54,22 @@ console.log(newQuery);
 
 /*
 device=iPhone&year=2007
+*/
+
+```
+
+### Typescript
+
+Filterion can be used in a type-safe context:
+
+```typescript
+import { Filterion } from 'filterion';
+
+const filterion = new Filterion<{ name: string }>()
+  .add('price', 649);
+
+/*
+error TS2345: Argument of type '"price"' is not assignable to parameter of type '"name"'.
 */
 
 ```
