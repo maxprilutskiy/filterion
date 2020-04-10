@@ -42,15 +42,16 @@
     "build"
   ],
   "keywords": [
+    "querystring",
+    "query-string",
+    "urlsearchparams",
+    "query",
+    "string",
     "filter",
     "criteria",
     "search",
     "typescript",
     "javascript",
-    "library",
-    "query",
-    "string",
-    "querystring",
-    "query-string"
+    "library"
   ]
 }

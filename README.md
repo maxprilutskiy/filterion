@@ -1,30 +1,19 @@
-<p align="center">
-  <img width="200" src="/assets/logo.svg?sanitize=true">
-</p>
-
-<h1 align="center">
-Filterion
-
+<p align="center"><img width="200" src="/assets/logo.svg?sanitize=true"></p>
+<h1 align="center">Filterion</h1>
 <div align="center">
-
+An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for filter criteria management.
 </div>
-</h1>
-
 <div align="center">
-
-</div>
-
-An [immutable](https://en.wikipedia.org/wiki/Immutable_object) data structure for filter criteria management.
 
 [![Build Status](https://travis-ci.com/prilutskiy/filterion.svg?branch=master)](https://travis-ci.com/prilutskiy/filterion)
 [![codecov](https://codecov.io/gh/prilutskiy/filterion/branch/master/graph/badge.svg)](https://codecov.io/gh/prilutskiy/filterion)
 [![CodeFactor](https://www.codefactor.io/repository/github/prilutskiy/filterion/badge)](https://www.codefactor.io/repository/github/prilutskiy/filterion)
 
-**Filterion** data cannot be changed once created, leading to much simpler application development, no defensive copying, enabling advanced memoization and change detection techniques with simple logic. Persistent data structure presents a mutative API which does not update the data in-place, but instead always yields new updated data.
+</div>
 
 **Filterion** has a built-in API to work with query strings, allowing zero-effort URL manipulations.
 
-## Install
+## 📦 Install
 
 Install `filterion` using yarn or npm:
 
@@ -34,7 +23,7 @@ $ yarn add filterion
 $ npm i filterion
 ```
 
-## Usage
+## 🔨 Usage
 
 Require it into any module and use natively:
 
@@ -73,13 +62,12 @@ device=iPhone&year=2007
 
 ```
 
-## API
+## 📖 API
 
 ```
 // TODO
 ```
 
-## Kudos
 Inspired by [immutable.js](https://github.com/immutable-js/immutable-js), an immutable collections library for JavaScript.
 
 ## License
