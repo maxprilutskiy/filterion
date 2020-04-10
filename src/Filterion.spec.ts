@@ -519,11 +519,32 @@ describe('filterion.equals', () => {
     expect(equals).toBeTruthy();
   })
   it('Instance equals different instance with the same payload', () => {
-    const filterion = new Filterion<MyTestFilter>();
+    const filterion1 = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const filterion2 = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
 
-    const equals = filterion.equals(filterion);
+    const equals = filterion1.equals(filterion2);
 
     expect(equals).toBeTruthy();
+  })
+  it('Instances are equal when both are empty', () => {
+    const filterion1 = new Filterion<MyTestFilter>();
+    const filterion2 = new Filterion<MyTestFilter>();
+
+    const equals = filterion1.equals(filterion2);
+
+    expect(equals).toBeTruthy();
+  })
+  it('Instances are not equal when payloads are different', () => {
+    const filterion1 = new Filterion<MyTestFilter>()
+      .add('name', 'John');
+    const filterion2 = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+
+    const equals = filterion1.equals(filterion2);
+
+    expect(equals).toBeFalsy();
   })
 });
 
