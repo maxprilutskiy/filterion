@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/prilutskiy/filterion/compare/v1.3.1...v1.3.2) (2020-04-10)
+
+
+### Bug Fixes
+
+* **remove:** remove used without a value removes the filter entirely ([#24](https://github.com/prilutskiy/filterion/issues/24)) ([7dc6bb7](https://github.com/prilutskiy/filterion/commit/7dc6bb76939ac1222ae457c07182a41f4320cc93))
+
 ## [1.3.1](https://github.com/prilutskiy/filterion/compare/v1.3.0...v1.3.1) (2020-04-07)
 
 
