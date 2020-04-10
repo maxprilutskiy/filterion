@@ -10,7 +10,6 @@ install:
   - yarn
 
 script:
-  - yarn commitlint-travis
   - yarn lint
   - yarn test --coverage
   - bash <(curl -s https://codecov.io/bash)

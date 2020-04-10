@@ -40,5 +40,17 @@
   },
   "files": [
     "build"
+  ],
+  "keywords": [
+    "filter",
+    "criteria",
+    "search",
+    "typescript",
+    "javascript",
+    "library",
+    "query",
+    "string",
+    "querystring",
+    "query-string"
   ]
 }

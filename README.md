@@ -22,7 +22,7 @@ An [immutable](https://en.wikipedia.org/wiki/Immutable_object) data structure fo
 
 **Filterion** data cannot be changed once created, leading to much simpler application development, no defensive copying, enabling advanced memoization and change detection techniques with simple logic. Persistent data structure presents a mutative API which does not update the data in-place, but instead always yields new updated data.
 
-**Filterion** has a built-in API to work with query strings, allowing zero-effort url manipulations.
+**Filterion** has a built-in API to work with query strings, allowing zero-effort URL manipulations.
 
 ## Install
 
