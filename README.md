@@ -1,4 +1,4 @@
-<img width="120" src="https://github.com/prilutskiy/filterion/raw/master/assets/logo.svg?sanitize=true" align="right">
+<img width="150" src="https://github.com/prilutskiy/filterion/raw/master/assets/logo.svg?sanitize=true" align="right">
 
 # Filterion
 [![Build Status](https://travis-ci.com/prilutskiy/filterion.svg?branch=master)](https://travis-ci.com/prilutskiy/filterion)
