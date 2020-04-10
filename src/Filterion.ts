@@ -30,23 +30,6 @@ export class Filterion<S extends {} = any> {
   }
 
   /**
-   * Create Filterion from a query string
-   */
-  public fromQueryString<S extends {} = {}>(queryString: string): Filterion<S> {
-    let startIndex = queryString.indexOf('?');
-    if (startIndex === -1) { startIndex = 0; }
-    else { startIndex += 1; }
-
-    const result = queryString
-      .substr(startIndex)
-      .split('&')
-      .map(parseExpression(this.config.operators))
-      .reduce<Filterion<S>>((f, [field, op, value]) => f.add(field as any, value, op), new Filterion());
-
-    return result;
-  }
-
-  /**
    * Creates an instance of Filterion
    */
   public constructor(config?: Partial<IFilterionConfig<S>>) {
@@ -85,13 +68,14 @@ export class Filterion<S extends {} = any> {
   public remove<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = this.config.defaultOperator): Filterion<S> {
     this.validateOperator(op);
 
-    if (!this.exists(field, value, op)) { return this; }
-
     const payloadClone = Filterion.clonePayload(this.payload);
-    if (!value) {
+    if (value == null && arguments.length === 1) {
       delete payloadClone[field];
       return new Filterion<S>(this.config).attach(payloadClone);
     }
+
+    if (!this.exists(field, value, op)) { return this; }
+
     const values = Array.isArray(value) ? value : [value];
 
     this.ensureFieldValueNotEmpty(payloadClone, field, op);
@@ -152,7 +136,7 @@ export class Filterion<S extends {} = any> {
     this.validateOperator(op);
 
     const values = Array.isArray(value) ? value : [value];
-    const result = values.every((v) => !!this.payload?.[field]?.[op]?.includes(v));
+    const result = values.every((v) => !!this.payload[field]?.[op]?.includes(v));
     return result;
   }
 
@@ -169,7 +153,8 @@ export class Filterion<S extends {} = any> {
    * Check if Filterion instance is a superset of another Filterion instance
    */
   public includes(filterion: Filterion<S>): boolean {
-    if (this.isEmpty && filterion.isEmpty) { return true; }
+    if (filterion.isEmpty) { return true; }
+    if (this.isEmpty) { return false; }
 
     const currentPayload = this.payload;
     const externalPayload = filterion.payload;
@@ -245,6 +230,24 @@ export class Filterion<S extends {} = any> {
    */
   public toJSON(): IFilterionPayload<S> {
     return this.payload;
+  }
+
+  /**
+   * Parse a query string and merge results into the current Filterion instance
+   */
+  public fromQueryString(queryString: string): Filterion<S> {
+    let startIndex = queryString.indexOf('?');
+    if (startIndex === -1) { startIndex = 0; }
+    else { startIndex += 1; }
+
+    const external = queryString
+      .substr(startIndex)
+      .split('&')
+      .map(parseExpression(this.config.operators))
+      .reduce<Filterion<S>>((f, [field, op, value]) => f.add(field as any, value, op), new Filterion(this.config));
+
+    const result = this.concat(external);
+    return result;
   }
 
   /*
@@ -334,13 +337,13 @@ export class Filterion<S extends {} = any> {
     if (!config.defaultOperator) {
       throw new Error('Default operator not found');
     }
-    if (!config.operators?.length) {
+    if (!config.operators.length) {
       throw new Error('No operators found');
     }
-    if (!config.operators?.includes(config.defaultOperator)) {
+    if (!config.operators.includes(config.defaultOperator)) {
       throw new Error('Default operator must be included in operators list');
     }
-    if (config.operators?.some((op) => op.includes('&'))) {
+    if (config.operators.some((op) => op.includes('&'))) {
       throw new Error('Ampersand operator is forbidden');
     }
     for (const op of config.operators) {

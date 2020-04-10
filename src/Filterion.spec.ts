@@ -283,6 +283,32 @@ describe('filterion.remove', () => {
 
     expect(newFilterionPayload).toBe(expectedPayload);
   });
+  it('Removing a filter without a value should remove the filter entirely', () => {
+    const expectedPayload = { isActive: { '=': [true] } };
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('name', 'John')
+      .add('isActive', true);
+
+    const payload = filterion
+      .remove('name')
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
+  it('Removing a filter with undefined value should not remove the filter entirely', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('name', 'John')
+      .add('isActive', true);
+    const expectedPayload = filterion.getPayload();
+
+    const payload = filterion
+      .remove('name', undefined)
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
   it('Removing a filter with an unknown operator results in an error', () => {
     const ctor = (): Filterion =>
       new Filterion<MyTestFilter>().remove('name', 'Max', '!=');
@@ -304,11 +330,29 @@ describe('filterion.includes', () => {
     expect(doesInclude).toBeTruthy();
   });
 
-  it('Includes should return false when unmatchingsubfilterion is passed', () => {
+  it('Includes should return false when unmatching subfilterion is passed', () => {
     const subfilterion = new Filterion<MyTestFilter>()
       .add('age', [10, 20]);
 
     const doesInclude = filterion.includes(subfilterion);
+
+    expect(doesInclude).toBeFalsy();
+  });
+
+  it('Includes should return true when the passed filterion is empty', () => {
+    const subfilterion = new Filterion<MyTestFilter>();
+
+    const doesInclude = filterion.includes(subfilterion);
+
+    expect(doesInclude).toBeTruthy();
+  });
+
+  it('Includes should return false when current filterion is empty and the passed filterion is not empty', () => {
+    const subfilterion = new Filterion<MyTestFilter>()
+      .add('isActive', true);
+
+    const doesInclude = new Filterion<MyTestFilter>()
+      .includes(subfilterion);
 
     expect(doesInclude).toBeFalsy();
   });
@@ -591,12 +635,9 @@ describe('filterion.toQueryString', () => {
 });
 
 describe('Filterion.fromQueryString', () => {
-  beforeAll(() => Filterion.configure({ operators: ['=', '<', '>'] }));
-  afterAll(() => Filterion.configure(DEFAULT_CONFIG));
-
   it('Query string parsing produces valid filterion', () => {
-    const queryString = 'http://localhost:3000?name=Max&name=%C2%B1!%40%23%24%25%5E%26*()\'_%2B%20%22%3B%2F%2F%5C%2C.&is%20active=true&age>0&age<100';
-    const expectedPayload = new Filterion<MyTestFilter>()
+    const queryString = 'name=Max&name=%C2%B1!%40%23%24%25%5E%26*()\'_%2B%20%22%3B%2F%2F%5C%2C.&is%20active=true&age>0&age<100';
+    const expectedPayload = new Filterion<MyTestFilter>({ operators: ['=', '<', '>'] })
       .add('name', 'Max')
       .add('name', '±!@#$%^&*()\'_+ ";//\\,.')
       .add('is active', true)
@@ -604,7 +645,38 @@ describe('Filterion.fromQueryString', () => {
       .add('age', 100, '<')
       .getPayload();
 
-    const payload = new Filterion<MyTestFilter>()
+    const payload = new Filterion<MyTestFilter>({ operators: ['=', '<', '>'] })
+      .fromQueryString(queryString)
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
+  it('URL string parsing produces valid filterion', () => {
+    const queryString = 'http://localhost:3000?name=Max&name=%C2%B1!%40%23%24%25%5E%26*()\'_%2B%20%22%3B%2F%2F%5C%2C.&is%20active=true&age>0&age<100';
+    const expectedPayload = new Filterion<MyTestFilter>({ operators: ['=', '<', '>'] })
+      .add('name', 'Max')
+      .add('name', '±!@#$%^&*()\'_+ ";//\\,.')
+      .add('is active', true)
+      .add('age', 0, '>')
+      .add('age', 100, '<')
+      .getPayload();
+
+    const payload = new Filterion<MyTestFilter>({ operators: ['=', '<', '>'] })
+      .fromQueryString(queryString)
+      .getPayload();
+
+    expect(payload).toStrictEqual(expectedPayload);
+  });
+  it('Parsed filterion is merged into existing filterion', () => {
+    const queryString = 'name=Jane&age=18';
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max');
+    const expectedPayload = filterion
+      .add('name', 'Jane')
+      .add('age', 18)
+      .getPayload();
+
+    const payload = filterion
       .fromQueryString(queryString)
       .getPayload();
 
