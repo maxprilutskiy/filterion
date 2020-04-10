@@ -58,7 +58,7 @@ device=iPhone&year=2007
 
 ```
 
-### Typescript
+#### Typescript
 
 Filterion can be used in a type-safe context:
 
