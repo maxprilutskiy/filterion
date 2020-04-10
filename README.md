@@ -1,10 +1,15 @@
-<img width="150" src="https://github.com/prilutskiy/filterion/raw/master/assets/logo.svg?sanitize=true" align="right">
-
-# Filterion [![Build Status](https://travis-ci.com/prilutskiy/filterion.svg?branch=master)](https://travis-ci.com/prilutskiy/filterion) [![codecov](https://codecov.io/gh/prilutskiy/filterion/branch/master/graph/badge.svg)](https://codecov.io/gh/prilutskiy/filterion) [![CodeFactor](https://www.codefactor.io/repository/github/prilutskiy/filterion/badge)](https://www.codefactor.io/repository/github/prilutskiy/filterion)
-
-<div>
+<p align="center"><img width="200" src="/assets/logo.svg?sanitize=true"></p>
+<h1 align="center">Filterion</h1>
+<div align="center">
 An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for filter criteria management.
 </div>
+<h3 align="center">
+
+[![Build Status](https://travis-ci.com/prilutskiy/filterion.svg?branch=master)](https://travis-ci.com/prilutskiy/filterion)
+[![codecov](https://codecov.io/gh/prilutskiy/filterion/branch/master/graph/badge.svg)](https://codecov.io/gh/prilutskiy/filterion)
+[![CodeFactor](https://www.codefactor.io/repository/github/prilutskiy/filterion/badge)](https://www.codefactor.io/repository/github/prilutskiy/filterion)
+
+</h3>
 
 ## 📦 Install
 
