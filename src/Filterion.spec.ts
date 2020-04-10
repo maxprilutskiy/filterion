@@ -510,6 +510,23 @@ describe('filterion.isEmpty', () => {
   });
 });
 
+describe('filterion.equals', () => {
+  it('Instance equals itself', () => {
+    const filterion = new Filterion<MyTestFilter>();
+
+    const equals = filterion.equals(filterion);
+
+    expect(equals).toBeTruthy();
+  })
+  it('Instance equals different instance with the same payload', () => {
+    const filterion = new Filterion<MyTestFilter>();
+
+    const equals = filterion.equals(filterion);
+
+    expect(equals).toBeTruthy();
+  })
+});
+
 describe('filterion.getPayload', () => {
   it('Newly created instance has empty payload', () => {
     const expectedPayload = {};
@@ -552,6 +569,21 @@ describe('filterion.getPartialPayload', () => {
       .getPartialPayload('age');
 
     expect(payload).toStrictEqual(expectedPartialPayload);
+  });
+});
+
+describe('filterion.getKeys', () => {
+  it('returns list of applied filter names', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', 'Max')
+      .add('age', 18)
+      .add('isActive', true)
+      .add('name', 'John');
+    const expectedKeys = ['name', 'age', 'isActive'];
+
+    const keys = filterion.getKeys();
+
+    expect(keys).toEqual(expectedKeys);
   });
 });
 
@@ -612,6 +644,25 @@ describe('filterion.toJSON', () => {
 
     expect(toJsonResult).toStrictEqual(payload);
   })
+});
+
+describe('filterion.toString', () => {
+  it('string representation matches jsonned instance', () => {
+    const filterion = new Filterion<MyTestFilter>().add('name', 'Max');
+    const expectedString = '{"name":{"=":["Max"]}}';
+
+    const filterionString = String(filterion);
+
+    expect(filterionString).toBe(expectedString);
+  });
+  it('string representation matches json representation', () => {
+    const filterion = new Filterion<MyTestFilter>().add('name', 'Max');
+    const expectedString = JSON.stringify(filterion);
+
+    const filterionString = String(filterion);
+
+    expect(filterionString).toBe(expectedString);
+  });
 });
 
 describe('filterion.toQueryString', () => {

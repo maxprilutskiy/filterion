@@ -118,6 +118,10 @@ export class Filterion<S extends {} = any> {
     return result;
   }
 
+  public getKeys(): (keyof S)[] {
+    return Object.keys(this.payload) as (keyof S)[];
+  }
+
   /**
    * Check whether current instance contains any filters values
    */
@@ -125,6 +129,19 @@ export class Filterion<S extends {} = any> {
     return Object.keys(this.payload).length === 0;
   }
 
+  public equals(filterion: Filterion<S>): boolean {
+    if (this === filterion) { return true; }
+    if (this.isEmpty && filterion.isEmpty) { return true; }
+
+    const includeEachOther = this.includes(filterion) && filterion.includes(this);
+    if (includeEachOther) { return true; }
+
+    return false;
+  }
+
+  /**
+   * Get configuration of the instance
+   */
   public getConfig(): IFilterionConfig<S> {
     return this.config;
   }
@@ -170,11 +187,11 @@ export class Filterion<S extends {} = any> {
       const currentValue = currentPayload[externalKey];
       const externalValue = externalPayload[externalKey];
 
-      const currenO = Object.keys(currentValue);
+      const currentOperators = Object.keys(currentValue);
       const externalOperators = Object.keys(externalValue);
 
-      const existingExternalOperators = externalOperators.filter((eop) => currenO.includes(eop));
-      const allExternalOperatorsExist = existingExternalOperators.length === currenO.length;
+      const existingExternalOperators = externalOperators.filter((eop) => currentOperators.includes(eop));
+      const allExternalOperatorsExist = existingExternalOperators.length === currentOperators.length;
       if (!allExternalOperatorsExist) { return false; }
 
       for (const externalOp of existingExternalOperators) {
@@ -230,6 +247,13 @@ export class Filterion<S extends {} = any> {
    */
   public toJSON(): IFilterionPayload<S> {
     return this.payload;
+  }
+
+  /*
+   * Get text representation of the instance
+   */
+  public toString(): string {
+    return JSON.stringify(this);
   }
 
   /**
