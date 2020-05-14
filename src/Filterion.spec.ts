@@ -196,6 +196,22 @@ describe('filterion.exists', () => {
 
     expect(exists).toBeTruthy();
   });
+  it('Value node should exist after filter was added', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', ['Max', 'John']);
+
+    const exists = filterion.exists('name');
+
+    expect(exists).toBeTruthy();
+  });
+  it('Value node should not exist before filter was added', () => {
+    const filterion = new Filterion<MyTestFilter>()
+      .add('name', ['Max', 'John']);
+
+    const exists = filterion.exists('age');
+
+    expect(exists).toBeFalsy();
+  });
   it('Value array should exist after its elements were added one by one', () => {
     const filterion = new Filterion<MyTestFilter>()
       .add('name', 'Max')

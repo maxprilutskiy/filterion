@@ -149,8 +149,13 @@ export class Filterion<S extends {} = any> {
   /**
    * Check if value exists for a given filter
    */
-  public exists<K extends keyof S>(field: K, value: MaybeArray<S[K]>, op = this.config.defaultOperator): boolean {
+  public exists<K extends keyof S>(field: K, value?: MaybeArray<S[K]>, op = this.config.defaultOperator): boolean {
     this.validateOperator(op);
+
+    if (value == null && arguments.length === 1) {
+      const fieldExists = field in this.payload;
+      return fieldExists;
+    }
 
     const values = Array.isArray(value) ? value : [value];
     const result = values.every((v) => !!this.payload[field]?.[op]?.includes(v));
