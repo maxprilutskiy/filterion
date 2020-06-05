@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/prilutskiy/filterion/compare/v1.4.0...v1.4.1) (2020-06-05)
+
+
+### Bug Fixes
+
+* **exists:** fixed .exists behavior when no value parameter is passed ([#28](https://github.com/prilutskiy/filterion/issues/28)) ([5e7f70b](https://github.com/prilutskiy/filterion/commit/5e7f70b2207bca010bcd7d10abe45487f9f50159))
+
 # [1.4.0](https://github.com/prilutskiy/filterion/compare/v1.3.2...v1.4.0) (2020-04-10)
 
 
