@@ -6,7 +6,7 @@ import { parseExpression } from './utils';
  * A data structure for filter criteria management
  *
  */
-export class Filterion<S extends {} = any> {
+export class Filterion<S extends unknown = any> {
   private static config: IFilterionConfig = DEFAULT_CONFIG;
 
   private payload: IFilterionPayload<S> = {};
@@ -310,7 +310,7 @@ export class Filterion<S extends {} = any> {
       payload[field] = {};
     }
     if (!payload[field][op]) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       payload[field][op] = [];
     }
@@ -341,7 +341,7 @@ export class Filterion<S extends {} = any> {
   /**
    * Create a copy of a Filterion payload
    */
-  private static clonePayload<S extends {}>(sourcePayload: IFilterionPayload<S>): IFilterionPayload<S> {
+  private static clonePayload<S extends unknown>(sourcePayload: IFilterionPayload<S>): IFilterionPayload<S> {
     const clonedPayload = JSON.parse(JSON.stringify(sourcePayload)) as typeof sourcePayload;
     return clonedPayload;
   }
