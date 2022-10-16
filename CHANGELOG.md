@@ -1,3 +1,12 @@
+## [1.4.2](https://github.com/prilutskiy/filterion/compare/v1.4.1...v1.4.2) (2022-10-16)
+
+
+### Bug Fixes
+
+* bump the release ([7df92ea](https://github.com/prilutskiy/filterion/commit/7df92ea4c8f1b7ef879c9c58747de02e44bd73db))
+* bump version ([#69](https://github.com/prilutskiy/filterion/issues/69)) ([edd7f4f](https://github.com/prilutskiy/filterion/commit/edd7f4f8eba2cb4e4bf16f08ff793dc3297302e9))
+* fixed semantic-release script ([0b17994](https://github.com/prilutskiy/filterion/commit/0b1799427e4acaa664f9a63c460cea2d71076ebd))
+
 ## [1.4.1](https://github.com/prilutskiy/filterion/compare/v1.4.0...v1.4.1) (2020-06-05)
 
 
