@@ -19,7 +19,7 @@
     "@semantic-release/npm": "^7.0.5",
     "@semantic-release/release-notes-generator": "^9.0.1",
     "@types/jest": "^25.2.3",
-    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/parser": "^3.1.0",
     "eslint": "^7.1.0",
     "eslint-plugin-jest": "^23.13.2",
