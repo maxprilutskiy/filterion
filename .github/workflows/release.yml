@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: bahmutov/npm-install@v1
+      - run: yarn test --coverage
+      - uses: codecov/codecov-action@v3
       - run: yarn semantic-release
         env:
           NPM_TOKEN: ${{ secrets.GH_TOKEN }}
