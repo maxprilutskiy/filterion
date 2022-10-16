@@ -4,6 +4,9 @@ on:
     branches:
     - main
 
+env:
+  HUSKY: 0 # Disable commit / push hooks when auto-publishing
+
 jobs:
   release:
     runs-on: ubuntu-latest
