@@ -1,7 +1,7 @@
 <p align="center"><img width="200" src="/assets/logo.svg?sanitize=true"></p>
 <h1 align="center">Filterion</h1>
 <div align="center">
-An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for search params management.
+A zero-dependency, <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for search params management.
 </div>
 <h3 align="center">
 
