@@ -6,11 +6,11 @@ import { parseExpression } from './utils';
  * A data structure for filter criteria management
  *
  */
-export class Filterion<S extends unknown = any> {
+export class Filterion<S = any> {
   private static config: IFilterionConfig = DEFAULT_CONFIG;
 
   private payload: IFilterionPayload<S> = {};
-  private config: IFilterionConfig<S> = Filterion.config;
+  private config: IFilterionConfig = Filterion.config;
 
   /**
    * Set global configuration
@@ -32,7 +32,7 @@ export class Filterion<S extends unknown = any> {
   /**
    * Creates an instance of Filterion
    */
-  public constructor(config?: Partial<IFilterionConfig<S>>) {
+  public constructor(config?: Partial<IFilterionConfig>) {
     Filterion.initConfig(
       config,
       (c) => this.config = c,
@@ -142,7 +142,7 @@ export class Filterion<S extends unknown = any> {
   /**
    * Get configuration of the instance
    */
-  public getConfig(): IFilterionConfig<S> {
+  public getConfig(): IFilterionConfig {
     return this.config;
   }
 
@@ -273,7 +273,7 @@ export class Filterion<S extends unknown = any> {
       .substr(startIndex)
       .split('&')
       .map(parseExpression(this.config.operators))
-      .reduce<Filterion<S>>((f, [field, op, value]) => f.add(field as any, value, op), new Filterion(this.config));
+      .reduce<Filterion<S>>((f, [field, op, value]) => f.add(field as any, value as any, op), new Filterion(this.config));
 
     const result = this.concat(external);
     return result;
@@ -341,7 +341,7 @@ export class Filterion<S extends unknown = any> {
   /**
    * Create a copy of a Filterion payload
    */
-  private static clonePayload<S extends unknown>(sourcePayload: IFilterionPayload<S>): IFilterionPayload<S> {
+  private static clonePayload<S>(sourcePayload: IFilterionPayload<S>): IFilterionPayload<S> {
     const clonedPayload = JSON.parse(JSON.stringify(sourcePayload)) as typeof sourcePayload;
     return clonedPayload;
   }

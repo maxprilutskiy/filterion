@@ -1,4 +1,4 @@
-export type IFilterionPayload<TFilters extends unknown> = {
+export type IFilterionPayload<TFilters> = {
   [f in keyof TFilters]?: {
     [op: string]: TFilters[f][];
   };
@@ -6,7 +6,7 @@ export type IFilterionPayload<TFilters extends unknown> = {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-export type IFilterionConfig<TFilters extends unknown = unknown> = {
+export type IFilterionConfig = {
   operators: string[];
   defaultOperator: string;
 }
