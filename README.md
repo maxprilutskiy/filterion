@@ -74,12 +74,6 @@ error TS2345: Argument of type '"price"' is not assignable to parameter of type 
 
 ```
 
-## 📖 API Reference
-
-```
-// TODO
-```
-
 Inspired by [immutable.js](https://github.com/immutable-js/immutable-js), an immutable collections library for JavaScript.
 
 ## License
