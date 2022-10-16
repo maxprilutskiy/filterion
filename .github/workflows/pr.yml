@@ -1,0 +1,15 @@
+name: Check
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+      - run: yarn lint
+      - run: yarn test --coverage
+      - run: yarn build
