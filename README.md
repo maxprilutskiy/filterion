@@ -83,4 +83,3 @@ Inspired by [immutable.js](https://github.com/immutable-js/immutable-js), an imm
 
 ## License
 MIT
-
