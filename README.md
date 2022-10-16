@@ -1,13 +1,13 @@
 <p align="center"><img width="200" src="/assets/logo.svg?sanitize=true"></p>
 <h1 align="center">Filterion</h1>
 <div align="center">
-An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for filter criteria management.
+An <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a> data structure for search params management.
 </div>
 <h3 align="center">
 
-[![Build Status](https://travis-ci.com/prilutskiy/filterion.svg?branch=master)](https://travis-ci.com/prilutskiy/filterion)
-[![codecov](https://codecov.io/gh/prilutskiy/filterion/branch/master/graph/badge.svg)](https://codecov.io/gh/prilutskiy/filterion)
-[![CodeFactor](https://www.codefactor.io/repository/github/prilutskiy/filterion/badge)](https://www.codefactor.io/repository/github/prilutskiy/filterion)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+[![codecov](https://codecov.io/gh/maxprilutskiy/filterion/branch/main/graph/badge.svg?token=XNVEAODW13)](https://codecov.io/gh/maxprilutskiy/filterion)
+[![Release](https://github.com/maxprilutskiy/filterion/actions/workflows/release.yml/badge.svg)](https://github.com/maxprilutskiy/filterion/actions/workflows/release.yml)
 
 </h3>
 
@@ -65,6 +65,11 @@ Filterion can be used in a type-safe context:
 ```typescript
 import { Filterion } from 'filterion';
 
+// Good
+const filterion = new Filterion<{ price: string }>()
+  .add('price', 649);
+
+// Bad
 const filterion = new Filterion<{ name: string }>()
   .add('price', 649);
 
