@@ -1,10 +1,10 @@
 {
   "name": "filterion",
   "version": "1.5.2",
-  "description": "Data structure for filter criteria management",
+  "description": "A declarative JavaScript library for search params orchestration.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "repository": "https://github.com/prilutskiy/filterion",
+  "repository": "https://github.com/maxprilutskiy/filterion",
   "author": "Max Prilutskiy",
   "license": "MIT",
   "private": false,
