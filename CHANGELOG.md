@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/prilutskiy/filterion/compare/v1.5.0...v1.5.1) (2023-04-17)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump ts-jest from 29.0.3 to 29.1.0 ([#143](https://github.com/prilutskiy/filterion/issues/143)) ([7e41b87](https://github.com/prilutskiy/filterion/commit/7e41b87f0f68e45cbe55a5a4abca839a8e681022)), closes [#4064](https://github.com/prilutskiy/filterion/issues/4064) [#4048](https://github.com/prilutskiy/filterion/issues/4048) [#3966](https://github.com/prilutskiy/filterion/issues/3966) [#3966](https://github.com/prilutskiy/filterion/issues/3966) [#3966](https://github.com/prilutskiy/filterion/issues/3966) [#3976](https://github.com/prilutskiy/filterion/issues/3976) [#4070](https://github.com/prilutskiy/filterion/issues/4070) [#4072](https://github.com/prilutskiy/filterion/issues/4072) [#4073](https://github.com/prilutskiy/filterion/issues/4073) [#4071](https://github.com/prilutskiy/filterion/issues/4071) [#4068](https://github.com/prilutskiy/filterion/issues/4068) [#4069](https://github.com/prilutskiy/filterion/issues/4069) [#4064](https://github.com/prilutskiy/filterion/issues/4064) [#4067](https://github.com/prilutskiy/filterion/issues/4067) [#4066](https://github.com/prilutskiy/filterion/issues/4066) [#4065](https://github.com/prilutskiy/filterion/issues/4065)
+
 # [1.5.0](https://github.com/prilutskiy/filterion/compare/v1.4.2...v1.5.0) (2023-04-17)
 
 
