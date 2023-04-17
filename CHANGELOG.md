@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/prilutskiy/filterion/compare/v1.4.2...v1.5.0) (2023-04-17)
+
+
+### Features
+
+* **deps-dev:** bump @commitlint/config-conventional from 17.1.0 to 17.4.4 ([#135](https://github.com/prilutskiy/filterion/issues/135)) ([58e9ecd](https://github.com/prilutskiy/filterion/commit/58e9ecd29e75e37aef0d68930c44cb2ba1c16925)), closes [#3538](https://github.com/prilutskiy/filterion/issues/3538) [conventional-changelog/commitlint#3538](https://github.com/conventional-changelog/commitlint/issues/3538) [#3531](https://github.com/prilutskiy/filterion/issues/3531) [#3499](https://github.com/prilutskiy/filterion/issues/3499) [conventional-changelog/commitlint#3499](https://github.com/conventional-changelog/commitlint/issues/3499) [conventional-changelog/commitlint#3490](https://github.com/conventional-changelog/commitlint/issues/3490) [#3425](https://github.com/prilutskiy/filterion/issues/3425)
+
 ## [1.4.2](https://github.com/prilutskiy/filterion/compare/v1.4.1...v1.4.2) (2022-10-16)
 
 

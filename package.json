@@ -1,6 +1,6 @@
 {
   "name": "filterion",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Data structure for filter criteria management",
   "main": "build/index.js",
   "types": "build/index.d.ts",
