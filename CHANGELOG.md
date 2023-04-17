@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/prilutskiy/filterion/compare/v1.5.1...v1.5.2) (2023-04-17)
+
+
+### Bug Fixes
+
+* updated semantic-release deps ([b0a0ec5](https://github.com/prilutskiy/filterion/commit/b0a0ec5650cb9fbe1ce6d34e4858e206733b7bd7))
+
 ## [1.5.1](https://github.com/prilutskiy/filterion/compare/v1.5.0...v1.5.1) (2023-04-17)
 
 
