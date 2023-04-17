@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/maxprilutskiy/filterion/compare/v1.5.2...v1.5.3) (2023-04-17)
+
+
+### Bug Fixes
+
+* updated package.json metadata ([fdd8c3b](https://github.com/maxprilutskiy/filterion/commit/fdd8c3b719a59c3fdd087463efb055ee12c5dbf0))
+
 ## [1.5.2](https://github.com/prilutskiy/filterion/compare/v1.5.1...v1.5.2) (2023-04-17)
 
 

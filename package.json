@@ -1,6 +1,6 @@
 {
   "name": "filterion",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A declarative JavaScript library for search params orchestration.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
